@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.noob.module.admin.user.model.dto.*;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -39,6 +40,7 @@ import static com.noob.module.admin.user.service.impl.UserServiceImpl.SALT;
  * 用户接口
  * 用户信息管理：提供用户注册、登录注销、获取登录用户信息、后台管理用户、用户数据更新等（结合实际业务进行扩展）
  */
+@Api(value = "用户管理", tags = "admin-用户管理")
 @RestController
 @RequestMapping("/user")
 @Slf4j

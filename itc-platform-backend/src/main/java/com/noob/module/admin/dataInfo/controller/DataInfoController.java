@@ -17,6 +17,7 @@ import com.noob.module.admin.dataInfo.service.DataInfoService;
 import com.noob.module.admin.user.model.entity.User;
 import com.noob.module.admin.user.service.UserService;
 import com.noob.module.admin.dataInfo.constant.DataInfoConstant;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * 数据接口
  */
+@Api(value = "数据管理", tags = "admin-数据管理")
 @RestController
 @RequestMapping("/dataInfo")
 @Slf4j

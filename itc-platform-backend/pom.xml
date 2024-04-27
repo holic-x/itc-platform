@@ -14,7 +14,7 @@
     <groupId>com.noob</groupId>
     <artifactId>itc-platform-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ib-backend</name>
+    <name>itc-platform-backend</name>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -116,6 +116,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
         </dependency>
     </dependencies>
 

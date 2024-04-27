@@ -17,6 +17,7 @@ import com.noob.module.admin.template.model.dto.TemplateAddRequest;
 import com.noob.module.admin.template.model.dto.TemplateQueryRequest;
 import com.noob.module.admin.template.model.entity.Template;
 import com.noob.module.admin.template.service.TemplateService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * 模板接口
  */
+@Api(value = "模板管理", tags = "admin-模板管理")
 @RestController
 @RequestMapping("/template")
 @Slf4j

@@ -14,6 +14,7 @@ import com.noob.module.admin.user.model.entity.User;
 import com.noob.module.admin.post.model.vo.PostVO;
 import com.noob.module.admin.post.service.PostService;
 import com.noob.module.admin.user.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.List;
 /**
  * 帖子接口
  */
+@Api(value = "文章管理", tags = "admin-文章管理")
 @RestController
 @RequestMapping("/post")
 @Slf4j

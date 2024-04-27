@@ -11,6 +11,8 @@ import com.noob.framework.exception.BusinessException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 帖子点赞接口
  *
  */
+@Api(value = "帖子点赞管理", tags = "admin-帖子点赞管理")
 @RestController
 @RequestMapping("/post_thumb")
 @Slf4j

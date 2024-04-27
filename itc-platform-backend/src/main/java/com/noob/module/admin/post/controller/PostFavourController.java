@@ -18,6 +18,8 @@ import com.noob.module.admin.post.service.PostFavourService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 帖子收藏接口
  *
  */
+@Api(value = "文章收藏管理", tags = "admin-文章收藏管理")
 @RestController
 @RequestMapping("/post_favour")
 @Slf4j

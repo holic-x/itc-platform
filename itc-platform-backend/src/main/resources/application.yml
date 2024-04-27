@@ -102,3 +102,4 @@ knife4j:
           - com.noob.module.admin.post.controller
           - com.noob.module.admin.template.controller
           - com.noob.module.admin.user.controller
+          - com.noob.module.front.search.controller
