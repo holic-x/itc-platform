@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noob.module.template.mapper.TemplateMapper">
+
+    <resultMap id="BaseResultMap" type="com.noob.module.template.model.entity.Template">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="templateName" column="templateName" jdbcType="VARCHAR"/>
+            <result property="templateContent" column="templateContent" jdbcType="VARCHAR"/>
+            <result property="creater" column="creater" jdbcType="BIGINT"/>
+            <result property="updater" column="updater" jdbcType="BIGINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,templateName,templateContent,
+        creater,updater,createTime,
+        updateTime,isDelete,status
+    </sql>
+</mapper>

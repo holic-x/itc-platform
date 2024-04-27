@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noob.module.dataInfo.mapper.DataInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.noob.module.dataInfo.model.entity.DataInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="dataName" column="dataName" jdbcType="VARCHAR"/>
+            <result property="dataType" column="dataType" jdbcType="VARCHAR"/>
+            <result property="dataContent" column="dataContent" jdbcType="VARCHAR"/>
+            <result property="creater" column="creater" jdbcType="BIGINT"/>
+            <result property="updater" column="updater" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,dataName,dataType,
+        dataContent,creater,updater,
+        status,isDelete,createTime,
+        updateTime
+    </sql>
+
+    <!-- 映射关系定义 -->
+    <resultMap id="getVO" type="com.noob.module.dataInfo.model.vo.DataInfoVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="dataName" column="dataName" jdbcType="VARCHAR"/>
+        <result property="dataType" column="dataType" jdbcType="VARCHAR"/>
+        <result property="dataContent" column="dataContent" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+        <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+
+        <!-- 冗余字段createrName：对应列名为createrName -->
+        <result property="createrName" column="createrName" jdbcType="VARCHAR"/>
+
+        <!-- 其他字段映射... -->
+
+        <!-- 关联外键映射(一对一)：creater -->
+        <association property="creater" javaType="com.noob.module.base.model.vo.UserVO">
+            <id property="id" column="id"/>
+            <result property="userName" column="createrUserName"/>
+            <result property="userAccount" column="createrUserAccount"/>
+            <!-- 其他字段映射定义 -->
+        </association>
+
+        <!-- 关联外键映射(一对一)：updater -->
+        <association property="updater" javaType="com.noob.module.base.model.vo.UserVO">
+            <id property="id" column="id"/>
+            <result property="userName" column="updaterUserName"/>
+            <result property="userAccount" column="updaterUserAccount"/>
+            <!-- 其他字段映射定义 -->
+        </association>
+
+    </resultMap>
+
+    <!-- 分页获取数据 -->
+    <select id="getVOByPage" resultMap="getVO" parameterType="com.noob.module.dataInfo.model.dto.DataInfoQueryRequest">
+        SELECT
+            di.id,
+            di.dataName,
+            di.dataType,
+            di.dataContent,
+            di.creater,
+            di.updater,
+            di.status,
+            di.isDelete,
+            di.createTime,
+            di.updateTime,
+            cu.userName "createrUserName" ,
+            cu.userName "createrName" ,
+            cu.userAccount "createrUserAccount",
+            uu.userName "updaterUserName",
+            uu.userAccount "updaterUserAccount"
+        FROM
+            data_info di
+                LEFT JOIN `user` cu ON cu.id = di.creater
+                LEFT JOIN `user` uu ON uu.id = di.updater
+        where 1=1
+        <!-- 条件数据封装 -->
+        <if test="params.dataName !=null and  params.dataName != ''">
+            and di.dataName like concat('%',#{params.dataName},'%')
+        </if>
+        <if test="params.dataType !=null and  params.dataType != ''">
+            and di.dataType = #{params.dataType}
+        </if>
+        <if test="params.dataContent !=null and  params.dataContent != ''">
+            and di.dataContent like concat('%',#{params.dataContent},'%')
+        </if>
+        <if test="params.status !=null and  params.status != ''">
+            and di.status = #{params.status}
+        </if>
+    </select>
+</mapper>
