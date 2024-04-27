@@ -24,3 +24,4 @@ hs_err_pid*
 replay_pid*
 /itc-platform-backend/.idea
 /itc-platform-backend/target
+itc-platform-backend/src/main/resources/application-remote.yml
