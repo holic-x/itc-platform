@@ -99,8 +99,10 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.noob.module.admin.dataInfo.controller
+          - com.noob.module.admin.interfaceInfo.controller
           - com.noob.module.admin.post.controller
           - com.noob.module.admin.search.controller
           - com.noob.module.admin.template.controller
           - com.noob.module.admin.user.controller
           - com.noob.module.front.search.controller
+          - com.noob.module.front.interfaceInfo.controller

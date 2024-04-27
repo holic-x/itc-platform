@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
  * @Date 2024/4/27 11:00
  */
 public enum SearchTypeEnum {
-    POST("帖子", "post"),
-    USER("用户", "user"),
-    PICTURE("图片", "picture"),
-    VIDEO("视频", "video");
+    POST("帖子", "articles"),
+    USER("用户", "users"),
+    PICTURE("图片", "pictures"),
+    INTERFACE_INFO("图片", "interfaces"),
+    VIDEO("视频", "videos");
 
     private final String text;
 

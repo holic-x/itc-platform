@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.common.BaseResponse;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
+import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.front.search.datasource.DataSource;
 import com.noob.module.front.search.datasource.PictureDataSource;
@@ -84,6 +85,7 @@ public class SearchOptimizeController {
 //        ThrowUtils.throwIf(searchTypeEnum==null,ErrorCode.PARAMS_ERROR);
         if (searchTypeEnum == null) {
             // 指定type为空则默认搜索所有数据（此处暂不作处理，实现可参考SearchController）
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"指定搜索类型错误");
         } else {
             SearchVO searchVO = new SearchVO();
             // 封装枚举类型类别,根据类别获取到对应的数据源
@@ -98,6 +100,6 @@ public class SearchOptimizeController {
             searchVO.setDataList(page.getRecords());
             return ResultUtils.success(searchVO);
         }
-        return null;
+//        return null;
     }
 }
