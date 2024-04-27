@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.noob.module.dataInfo.mapper.DataInfoMapper">
+<mapper namespace="com.noob.module.admin.dataInfo.mapper.DataInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.noob.module.dataInfo.model.entity.DataInfo">
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.dataInfo.model.entity.DataInfo">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="dataName" column="dataName" jdbcType="VARCHAR"/>
             <result property="dataType" column="dataType" jdbcType="VARCHAR"/>
@@ -25,7 +25,7 @@
     </sql>
 
     <!-- 映射关系定义 -->
-    <resultMap id="getVO" type="com.noob.module.dataInfo.model.vo.DataInfoVO">
+    <resultMap id="getVO" type="com.noob.module.admin.dataInfo.model.vo.DataInfoVO">
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="dataName" column="dataName" jdbcType="VARCHAR"/>
         <result property="dataType" column="dataType" jdbcType="VARCHAR"/>
@@ -41,7 +41,7 @@
         <!-- 其他字段映射... -->
 
         <!-- 关联外键映射(一对一)：creater -->
-        <association property="creater" javaType="com.noob.module.base.model.vo.UserVO">
+        <association property="creater" javaType="com.noob.module.admin.user.model.vo.UserVO">
             <id property="id" column="id"/>
             <result property="userName" column="createrUserName"/>
             <result property="userAccount" column="createrUserAccount"/>
@@ -49,7 +49,7 @@
         </association>
 
         <!-- 关联外键映射(一对一)：updater -->
-        <association property="updater" javaType="com.noob.module.base.model.vo.UserVO">
+        <association property="updater" javaType="com.noob.module.admin.user.model.vo.UserVO">
             <id property="id" column="id"/>
             <result property="userName" column="updaterUserName"/>
             <result property="userAccount" column="updaterUserAccount"/>
@@ -59,7 +59,7 @@
     </resultMap>
 
     <!-- 分页获取数据 -->
-    <select id="getVOByPage" resultMap="getVO" parameterType="com.noob.module.dataInfo.model.dto.DataInfoQueryRequest">
+    <select id="getVOByPage" resultMap="getVO" parameterType="com.noob.module.admin.dataInfo.model.dto.DataInfoQueryRequest">
         SELECT
             di.id,
             di.dataName,

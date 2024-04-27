@@ -1,10 +1,10 @@
 package com.noob.module.base.esdao;
 
-import com.noob.module.base.esdao.PostEsDao;
-import com.noob.module.base.model.dto.post.PostEsDTO;
-import com.noob.module.base.model.dto.post.PostQueryRequest;
-import com.noob.module.base.model.entity.Post;
-import com.noob.module.base.service.PostService;
+import com.noob.module.admin.post.esdao.PostEsDao;
+import com.noob.module.admin.post.model.dto.post.PostEsDTO;
+import com.noob.module.admin.post.model.dto.post.PostQueryRequest;
+import com.noob.module.admin.post.model.entity.Post;
+import com.noob.module.admin.post.service.PostService;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.noob.module.base.service;
 
-import com.noob.module.base.model.entity.User;
+import com.noob.module.admin.user.model.entity.User;
 import javax.annotation.Resource;
 
-import com.noob.module.base.service.PostThumbService;
+import com.noob.module.admin.post.service.PostThumbService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
