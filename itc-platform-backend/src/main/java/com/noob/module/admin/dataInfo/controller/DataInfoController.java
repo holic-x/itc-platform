@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * 数据接口
  */
-@Api(value = "数据管理", tags = "admin-数据管理")
+//@Api(tags = {"admin","DataInfoController"})
 @RestController
-@RequestMapping("/dataInfo")
+@RequestMapping("/admin/dataInfo")
 @Slf4j
 public class DataInfoController {
 

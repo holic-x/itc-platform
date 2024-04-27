@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
  * 帖子收藏接口
  *
  */
-@Api(value = "文章收藏管理", tags = "admin-文章收藏管理")
+@Api(description = "帖子收藏接口")
 @RestController
-@RequestMapping("/post_favour")
+@RequestMapping("/admin/post_favour")
 @Slf4j
 public class PostFavourController {
 

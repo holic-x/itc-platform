@@ -27,9 +27,8 @@ import java.util.List;
 /**
  * 帖子接口
  */
-@Api(value = "文章管理", tags = "admin-文章管理")
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/admin/post")
 @Slf4j
 public class PostController {
 

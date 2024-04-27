@@ -40,7 +40,8 @@ import static com.noob.module.admin.user.service.impl.UserServiceImpl.SALT;
  * 用户接口
  * 用户信息管理：提供用户注册、登录注销、获取登录用户信息、后台管理用户、用户数据更新等（结合实际业务进行扩展）
  */
-@Api(value = "用户管理", tags = "admin-用户管理")
+// tags对应swagger接口文档标签分类，相同标签的内容会放在同一个文件夹（基于此与前端生成service的文件名，如果存在中文则对应中文拼音翻译）
+//@Api(tags = {"admin","UserController"})
 @RestController
 @RequestMapping("/user")
 @Slf4j

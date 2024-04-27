@@ -33,7 +33,6 @@ import java.util.Map;
  * @Author holic-x
  * @Date 2024/4/27 11:22
  */
-@Api(value = "聚合搜索(优化)",tags = "聚合搜索(优化)")
 @RestController
 @RequestMapping("/searchOptimize")
 @Slf4j

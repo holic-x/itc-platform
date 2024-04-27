@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * 模板接口
  */
-@Api(value = "模板管理", tags = "admin-模板管理")
 @RestController
 @RequestMapping("/template")
 @Slf4j

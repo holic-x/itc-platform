@@ -23,9 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 帖子点赞接口
  *
  */
-@Api(value = "帖子点赞管理", tags = "admin-帖子点赞管理")
 @RestController
-@RequestMapping("/post_thumb")
+@RequestMapping("/admin/post_thumb")
 @Slf4j
 public class PostThumbController {
 

@@ -36,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
  * @Author holic-x
  * @Date 2024/4/27 10:57
  */
-@Api(value = "聚合搜索",tags = "聚合搜索")
 @RestController
 @RequestMapping("/search")
 @Slf4j

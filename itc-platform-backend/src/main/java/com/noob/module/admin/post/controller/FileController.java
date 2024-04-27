@@ -30,9 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
  * 文件接口
  *
  */
-@Api(value = "文件管理", tags = "admin-文件管理")
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/admin/file")
 @Slf4j
 public class FileController {
 

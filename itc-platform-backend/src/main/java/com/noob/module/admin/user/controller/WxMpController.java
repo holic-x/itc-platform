@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 微信公众号相关接口
  **/
-@Api(value = "微信公众号对接", tags = "微信公众号对接")
 @RestController
 @RequestMapping("/")
 @Slf4j
