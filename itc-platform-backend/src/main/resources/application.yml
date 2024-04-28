@@ -102,7 +102,8 @@ knife4j:
           - com.noob.module.admin.base.post.controller
           - com.noob.module.admin.base.template.controller
           - com.noob.module.admin.base.user.controller
-          - com.noob.module.admin.api.interfaceInfo.controller
+          - com.noob.module.admin.api.controller
+          - com.noob.module.admin.bi.controller
           - com.noob.module.admin.search.controller
           - com.noob.module.front.search.controller
-          - com.noob.module.front.interfaceInfo.controller
+          - com.noob.module.front.api.controller
