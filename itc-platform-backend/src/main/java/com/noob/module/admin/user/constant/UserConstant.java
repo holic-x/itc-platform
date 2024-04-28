@@ -1,4 +1,4 @@
-package com.noob.framework.constant;
+package com.noob.module.admin.user.constant;
 
 /**
  * 用户常量

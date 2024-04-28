@@ -8,7 +8,7 @@ import com.noob.module.admin.user.model.entity.User;
 import com.noob.module.admin.user.model.vo.LoginUserVO;
 import com.noob.module.admin.user.model.vo.UserVO;
 import com.noob.framework.config.WxOpenConfig;
-import com.noob.framework.constant.UserConstant;
+import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.module.admin.user.service.UserService;
 
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.noob.module.admin.user.model.dto.*;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;

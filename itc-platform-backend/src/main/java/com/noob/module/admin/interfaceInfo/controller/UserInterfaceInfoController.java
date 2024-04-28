@@ -8,7 +8,7 @@ import com.noob.framework.common.DeleteRequest;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
 import com.noob.framework.constant.CommonConstant;
-import com.noob.framework.constant.UserConstant;
+import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.module.admin.interfaceInfo.model.dto.UserInterfaceInfoAddRequest;
 import com.noob.module.admin.interfaceInfo.model.dto.UserInterfaceInfoQueryRequest;

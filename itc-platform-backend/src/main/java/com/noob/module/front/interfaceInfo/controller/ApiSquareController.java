@@ -1,35 +1,19 @@
 package com.noob.module.front.interfaceInfo.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.BaseResponse;
-import com.noob.framework.common.DeleteRequest;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
-import com.noob.framework.constant.CommonConstant;
-import com.noob.framework.constant.UserConstant;
+import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
-import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.interfaceInfo.mapper.UserInterfaceInfoCallMapper;
-import com.noob.module.admin.interfaceInfo.model.dto.InterfaceInfoAddRequest;
-import com.noob.module.admin.interfaceInfo.model.dto.InterfaceInfoQueryRequest;
-import com.noob.module.admin.interfaceInfo.model.dto.InterfaceInfoUpdateRequest;
 import com.noob.module.admin.interfaceInfo.model.entity.InterfaceInfo;
-import com.noob.module.admin.interfaceInfo.model.entity.UserInterfaceInfo;
-import com.noob.module.admin.interfaceInfo.service.InterfaceInfoService;
-import com.noob.module.admin.interfaceInfo.service.UserInterfaceInfoService;
-import com.noob.module.admin.user.model.entity.User;
-import com.noob.module.admin.user.service.UserService;
 import com.noob.module.front.interfaceInfo.model.dto.InterfaceInfoStatisticQueryRequest;
 import com.noob.module.front.interfaceInfo.model.vo.InterfaceInfoStatisticVO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

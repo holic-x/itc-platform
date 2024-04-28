@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.constant.CommonConstant;
-import com.noob.framework.constant.UserConstant;
+import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.user.model.dto.UserQueryRequest;
 import com.noob.module.admin.user.model.entity.User;
@@ -75,6 +75,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUserPassword(encryptPassword);
             // 设置默认头像配置
             user.setUserAvatar("https://img2.baidu.com/it/u=3442676033,4275801877&fm=253&fmt=auto&app=138&f=JPEG?w=522&h=386");
+
+
+
+
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
