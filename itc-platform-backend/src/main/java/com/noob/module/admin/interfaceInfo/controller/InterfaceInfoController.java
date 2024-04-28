@@ -1,13 +1,13 @@
 package com.noob.module.admin.interfaceInfo.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
-import com.noob.framework.common.BaseResponse;
-import com.noob.framework.common.DeleteRequest;
-import com.noob.framework.common.ErrorCode;
-import com.noob.framework.common.ResultUtils;
+import com.noob.framework.common.*;
 import com.noob.framework.constant.CommonConstant;
+import com.noob.module.admin.interfaceInfo.model.dto.InterfaceInfoInvokeRequest;
+import com.noob.module.admin.interfaceInfo.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 接口信息
@@ -298,7 +299,6 @@ public class InterfaceInfoController {
      * @param request
      * @return
      */
-    /*
     @PostMapping("/online")
     @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
@@ -313,7 +313,8 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
 
-        // 2.判断该接口是否可以调用
+        // 2.判断该接口是否可以调用 todo 模拟接口调用：确认接口是否响应正常 （此处默认放行）
+        /*
         // 创建一个User对象(模拟数据)
         com.noob.apiclientsdk.model.User user = new com.noob.apiclientsdk.model.User();
         // 设置user对象的username属性为"test"
@@ -322,11 +323,13 @@ public class InterfaceInfoController {
 //        String username = apiClient.getUserNameByPostBySign(user); // 直接调用api-platform-interface接口
         String username = apiClient.getUserNameByGateway(user); // 通过api-platform-gateway网关调用api-platform-interface接口
 
+
         // 如果username为空或空白字符串
         if (StringUtils.isBlank(username)) {
             // 抛出系统错误的业务异常，表示系统内部异常，并附带错误信息"接口验证失败"
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
         }
+        */
 
         // 3.修改接口数据库中的状态字段为 1
         // 创建一个InterfaceInfo对象
@@ -339,7 +342,6 @@ public class InterfaceInfoController {
         // 4.返回响应数据
         return ResultUtils.success(result);
     }
-*/
 
     /**
      * 下线接口:
@@ -350,7 +352,6 @@ public class InterfaceInfoController {
      * @param request
      * @return
      */
-    /*
     @PostMapping("/offline")
     @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest,
@@ -374,7 +375,6 @@ public class InterfaceInfoController {
         // 返回响应数据
         return ResultUtils.success(result);
     }
-*/
 
     /**
      * 测试调用接口
@@ -383,7 +383,6 @@ public class InterfaceInfoController {
      * @param request
      * @return 返回结果直接将响应结果返回，因为实际情况并不确定接口的返回值到底是什么，只需要将结果数据返回即可
      */
-    /*
     @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
                                                     HttpServletRequest request) throws UnsupportedEncodingException {
@@ -402,9 +401,14 @@ public class InterfaceInfoController {
         if (oldInterfaceInfo.getStatus() == InterfaceInfoEnum.OFFLINE.getValue()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
         }
+
+
+
+        // todo 模拟调用访问接口测试
         // 获取当前登录用户的ak和sk，相当于用户自己的这个身份去调用，因为知道是谁刷了这个接口，不会担心它刷接口，会比较安全(client-sdk封装了这个参数)
 //        User loginUser = userService.getLoginUser(request);
 
+        /*
         // 取消接口模拟测试，根据请求方式、接口数据来源类型调用访问(用户请求参数、用户请求URL调用访问)
         String sourceType = oldInterfaceInfo.getSourceType();
         String method = oldInterfaceInfo.getMethod();
@@ -443,9 +447,14 @@ public class InterfaceInfoController {
             // todo 其他数据来源类型接入
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口请求来源类型错误");
         }
+
+         */
+
+        // 模拟接口响应默认放行
+        String res = "success";
+
         // 返回成功响应，并包含调用结果
         return ResultUtils.success(res);
     }
-    */
 
 }
