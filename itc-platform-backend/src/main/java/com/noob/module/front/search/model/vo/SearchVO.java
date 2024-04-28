@@ -1,7 +1,7 @@
 package com.noob.module.front.search.model.vo;
 
-import com.noob.module.admin.post.model.vo.PostVO;
-import com.noob.module.admin.user.model.vo.UserVO;
+import com.noob.module.admin.base.post.model.vo.PostVO;
+import com.noob.module.admin.base.user.model.vo.UserVO;
 import com.noob.module.front.search.model.entity.Picture;
 import lombok.Data;
 

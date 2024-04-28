@@ -2,12 +2,12 @@ package com.noob.module.base.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.admin.post.model.entity.Post;
-import com.noob.module.admin.user.model.entity.User;
+import com.noob.module.admin.base.post.model.entity.Post;
+import com.noob.module.admin.base.user.model.entity.User;
 
 import javax.annotation.Resource;
 
-import com.noob.module.admin.post.service.PostFavourService;
+import com.noob.module.admin.base.post.service.PostFavourService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

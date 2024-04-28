@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.noob.module.admin.interfaceInfo.mapper.UserInterfaceInfoCallMapper">
+<mapper namespace="com.noob.module.admin.api.mapper.UserInterfaceInfoCallMapper">
 
-    <resultMap id="BaseResultMap" type="com.noob.module.admin.interfaceInfo.model.entity.UserInterfaceInfoCall">
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.api.model.entity.UserInterfaceInfoCall">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="interfaceInfoId" column="interfaceInfoId" jdbcType="BIGINT"/>
@@ -22,7 +22,7 @@
         callTime,duration,isDelete
     </sql>
     <select id="listInterfaceInfoStatistic"
-            resultType="com.noob.module.front.interfaceInfo.model.vo.InterfaceInfoStatisticVO">
+            resultType="com.noob.module.front.api.model.vo.InterfaceInfoStatisticVO">
 
 --         SELECT
 --             uiic.userId,

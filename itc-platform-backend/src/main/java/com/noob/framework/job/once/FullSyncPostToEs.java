@@ -1,9 +1,9 @@
 package com.noob.framework.job.once;
 
-import com.noob.module.admin.post.esdao.PostEsDao;
-import com.noob.module.admin.post.model.dto.post.PostEsDTO;
-import com.noob.module.admin.post.model.entity.Post;
-import com.noob.module.admin.post.service.PostService;
+import com.noob.module.admin.base.post.esdao.PostEsDao;
+import com.noob.module.admin.base.post.model.dto.post.PostEsDTO;
+import com.noob.module.admin.base.post.model.entity.Post;
+import com.noob.module.admin.base.post.service.PostService;
 
 import java.util.List;
 import java.util.stream.Collectors;

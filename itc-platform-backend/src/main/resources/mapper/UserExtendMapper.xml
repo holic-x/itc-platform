@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.noob.module.admin.user.mapper.UserExtendMapper">
+<mapper namespace="com.noob.module.admin.base.user.mapper.UserExtendMapper">
 
-    <resultMap id="BaseResultMap" type="com.noob.module.admin.user.model.entity.UserExtend">
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.base.user.model.entity.UserExtend">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="accessKey" column="accessKey" jdbcType="VARCHAR"/>

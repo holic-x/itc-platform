@@ -1,9 +1,9 @@
 package com.noob.module.front.search.datasource;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.admin.user.model.dto.UserQueryRequest;
-import com.noob.module.admin.user.model.vo.UserVO;
-import com.noob.module.admin.user.service.UserService;
+import com.noob.module.admin.base.user.model.dto.UserQueryRequest;
+import com.noob.module.admin.base.user.model.vo.UserVO;
+import com.noob.module.admin.base.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

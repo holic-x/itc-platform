@@ -1,10 +1,10 @@
 package com.noob.module.front.search.datasource;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.admin.post.model.dto.post.PostQueryRequest;
-import com.noob.module.admin.post.model.entity.Post;
-import com.noob.module.admin.post.model.vo.PostVO;
-import com.noob.module.admin.post.service.PostService;
+import com.noob.module.admin.base.post.model.dto.post.PostQueryRequest;
+import com.noob.module.admin.base.post.model.entity.Post;
+import com.noob.module.admin.base.post.model.vo.PostVO;
+import com.noob.module.admin.base.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;

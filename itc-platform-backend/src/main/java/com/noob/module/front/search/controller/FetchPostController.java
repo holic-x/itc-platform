@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.BaseResponse;
 import com.noob.framework.common.ResultUtils;
-import com.noob.module.admin.user.constant.UserConstant;
+import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.module.admin.search.model.dto.FetchPostQueryRequest;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import com.noob.module.admin.search.model.vo.FetchPostVO;

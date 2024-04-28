@@ -1,9 +1,9 @@
 package com.noob.framework.job.cycle;
 
-import com.noob.module.admin.post.esdao.PostEsDao;
-import com.noob.module.admin.post.mapper.PostMapper;
-import com.noob.module.admin.post.model.dto.post.PostEsDTO;
-import com.noob.module.admin.post.model.entity.Post;
+import com.noob.module.admin.base.post.esdao.PostEsDao;
+import com.noob.module.admin.base.post.mapper.PostMapper;
+import com.noob.module.admin.base.post.model.dto.post.PostEsDTO;
+import com.noob.module.admin.base.post.model.entity.Post;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

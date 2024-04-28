@@ -1,15 +1,8 @@
 package com.noob.module.admin.search.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.noob.module.admin.post.model.entity.Post;
-import com.noob.module.admin.post.model.vo.PostVO;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import lombok.Data;
-import net.sf.jsqlparser.statement.select.Fetch;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;

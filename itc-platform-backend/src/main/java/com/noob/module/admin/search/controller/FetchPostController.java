@@ -3,7 +3,7 @@ package com.noob.module.admin.search.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
-import com.noob.module.admin.user.constant.UserConstant;
+import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.search.model.dto.FetchPostQueryRequest;

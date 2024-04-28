@@ -2,9 +2,6 @@ package com.noob.module.admin.search.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.admin.post.model.dto.post.PostQueryRequest;
-import com.noob.module.admin.post.model.entity.Post;
-import com.noob.module.admin.post.model.vo.PostVO;
 import com.noob.module.admin.search.model.dto.FetchPostQueryRequest;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import com.baomidou.mybatisplus.extension.service.IService;

@@ -3,8 +3,8 @@ package com.noob.module.base.mapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.admin.post.mapper.PostFavourMapper;
-import com.noob.module.admin.post.model.entity.Post;
+import com.noob.module.admin.base.post.mapper.PostFavourMapper;
+import com.noob.module.admin.base.post.model.entity.Post;
 
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
