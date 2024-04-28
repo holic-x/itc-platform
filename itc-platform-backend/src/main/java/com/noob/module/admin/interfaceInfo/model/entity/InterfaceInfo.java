@@ -26,6 +26,11 @@ public class InterfaceInfo implements Serializable {
     private String name;
 
     /**
+     * 头像（图标）
+     */
+    private String avatar;
+
+    /**
      * 描述
      */
     private String description;

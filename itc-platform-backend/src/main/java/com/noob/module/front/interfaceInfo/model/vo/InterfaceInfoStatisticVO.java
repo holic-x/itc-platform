@@ -11,7 +11,6 @@ import java.util.Date;
 
 /**
  * 接口信息统计
- *
  */
 @Data
 public class InterfaceInfoStatisticVO implements Serializable {
@@ -25,6 +24,12 @@ public class InterfaceInfoStatisticVO implements Serializable {
      * 接口名称
      */
     private String interfaceInfoName;
+
+
+    /**
+     * 接口头像
+     */
+    private String interfaceInfoAvatar;
 
     /**
      * 调用总次数

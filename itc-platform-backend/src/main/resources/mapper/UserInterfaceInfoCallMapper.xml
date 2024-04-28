@@ -44,7 +44,7 @@
 --         group by interfaceInfoId
 
 
-select tb.*,ii.name 'interfaceInfoName'
+select tb.*,ii.name 'interfaceInfoName',ii.avatar 'interfaceInfoAvatar'
 from (
          SELECT
              uiic.interfaceInfoId,
