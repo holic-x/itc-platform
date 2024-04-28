@@ -11,7 +11,8 @@
             <result property="secretKey" column="secretKey" jdbcType="VARCHAR"/>
             <result property="is_develop" column="is_develop" jdbcType="TINYINT"/>
             <result property="score" column="score" jdbcType="INTEGER"/>
-            <result property="vip" column="vip" jdbcType="VARCHAR"/>
+            <result property="grade" column="grade" jdbcType="VARCHAR"/>
+            <result property="registerChannel" column="registerChannel" jdbcType="VARCHAR"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="VARCHAR"/>
@@ -20,7 +21,7 @@
     <sql id="Base_Column_List">
         id,userId,accessKey,
         secretKey,is_develop,score,
-        vip,createTime,updateTime,
+        grade,registerChannel,createTime,updateTime,
         isDelete
     </sql>
 </mapper>

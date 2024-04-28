@@ -1,4 +1,5 @@
 package com.noob.module.admin.user.service.impl;
+import java.util.Date;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -10,9 +11,11 @@ import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.user.model.dto.UserQueryRequest;
 import com.noob.module.admin.user.model.entity.User;
+import com.noob.module.admin.user.model.entity.UserExtend;
 import com.noob.module.admin.user.model.enums.UserRoleEnum;
 import com.noob.module.admin.user.model.vo.LoginUserVO;
 import com.noob.module.admin.user.model.vo.UserVO;
+import com.noob.module.admin.user.service.UserExtendService;
 import com.noob.module.admin.user.service.UserService;
 import com.noob.module.admin.user.mapper.UserMapper;
 import com.noob.framework.utils.SqlUtils;
@@ -21,12 +24,14 @@ import com.noob.framework.exception.BusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -36,6 +41,9 @@ import org.springframework.util.DigestUtils;
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Resource
+    private UserExtendService userExtendService;
 
     /**
      * 盐值，混淆密码
@@ -58,6 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
+        Date currentTime = new Date();
         synchronized (userAccount.intern()) {
             // 账户不能重复
             QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -73,17 +82,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUserName(userName);
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
+            user.setUserStatus(UserConstant.USER_STATUS_ACTIVE);
             // 设置默认头像配置
-            user.setUserAvatar("https://img2.baidu.com/it/u=3442676033,4275801877&fm=253&fmt=auto&app=138&f=JPEG?w=522&h=386");
-
-
-
+            user.setUserAvatar(UserConstant.DEFAULT_AVATAR);
 
             boolean saveResult = this.save(user);
             if (!saveResult) {
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "用户信息注册失败，数据库错误");
             }
-            return user.getId();
+            // 获取到用户注册的主键ID
+            Long insertUserId = user.getId();
+
+            // 调用方法初始化用户扩展字段信息
+            boolean initRes = userExtendService.initDefaultUserExtend(insertUserId,currentTime,UserConstant.USER_REGISTER_CHANNEL_FRONTEND);
+            ThrowUtils.throwIf(!initRes, ErrorCode.SYSTEM_ERROR,"用户扩展信息插入失败，请联系管理员");
+
+            // 返回注册成功的用户ID
+            return insertUserId;
         }
     }
 

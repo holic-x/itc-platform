@@ -10,6 +10,7 @@ import com.noob.module.admin.user.model.vo.UserVO;
 import com.noob.framework.config.WxOpenConfig;
 import com.noob.module.admin.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
+import com.noob.module.admin.user.service.UserExtendService;
 import com.noob.module.admin.user.service.UserService;
 
 import java.util.Date;
@@ -51,6 +52,9 @@ public class UserController {
 
     @Resource
     private WxOpenConfig wxOpenConfig;
+
+    @Resource
+    private UserExtendService userExtendService;
 
     // region 登录相关
 
@@ -164,10 +168,13 @@ public class UserController {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+
+        Date currentTime = new Date();
+
         User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
-        // 设置默认密码 12345678
-        String defaultPassword = "12345678";
+        // 设置默认密码
+        String defaultPassword = UserConstant.DEFAULT_PASSWORD;
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
         user.setUserPassword(encryptPassword);
 
@@ -177,6 +184,13 @@ public class UserController {
         // 保存用户信息
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        long insertUserId = user.getId();
+
+        // 保存用户扩展信息内容（初始化）
+        boolean initRes = userExtendService.initDefaultUserExtend(insertUserId,currentTime,UserConstant.USER_REGISTER_CHANNEL_BACKEND);
+        ThrowUtils.throwIf(!initRes, ErrorCode.SYSTEM_ERROR,"用户扩展信息插入失败，请联系管理员");
+
+        // 返回用户插入主键信息ID
         return ResultUtils.success(user.getId());
     }
 
