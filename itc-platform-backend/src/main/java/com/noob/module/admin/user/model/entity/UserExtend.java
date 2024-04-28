@@ -37,7 +37,7 @@ public class UserExtend implements Serializable {
     /**
      * 是否开启开发者模式（申请ak/sk）
      */
-    private Integer is_develop;
+    private Integer isDevelop;
 
     /**
      * 用户网站积分

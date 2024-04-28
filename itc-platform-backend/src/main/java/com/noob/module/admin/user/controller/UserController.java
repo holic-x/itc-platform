@@ -147,9 +147,27 @@ public class UserController {
      */
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
-        User user = userService.getLoginUser(request);
-        return ResultUtils.success(userService.getLoginUserVO(user));
+        // 方式1：获取登录用户（基本信息）
+         User user = userService.getLoginUser(request);
+         return ResultUtils.success(userService.getLoginUserVO(user));
     }
+
+    /**
+     * 获取用户信息详情（获取当前登录用户）
+     * @return
+     */
+    @GetMapping("/account/getUserVOMoreByCurrentLoginUser")
+    public BaseResponse<UserVO> getUserVOMoreByCurrentLoginUser(HttpServletRequest request) {
+        // 先判断是否已登录
+        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 获取用户信息详情
+        return ResultUtils.success(userService.getUserVOMore(currentUser.getId()));
+    }
+
 
     // endregion
 

@@ -25,7 +25,7 @@ public class UserExtendServiceImpl extends ServiceImpl<UserExtendMapper, UserExt
         // 初始化用户扩展信息（user_extend）
         UserExtend userExtend = new UserExtend();
         userExtend.setUserId(uid);
-        userExtend.setIs_develop(UserConstant.IS_DEVELOP_OFF);
+        userExtend.setIsDevelop(UserConstant.IS_DEVELOP_OFF);
         // 初始化用户积分
         userExtend.setScore(UserConstant.INIT_USER_SCORE);
         // 初始化用户等级

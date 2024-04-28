@@ -9,7 +9,7 @@
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="accessKey" column="accessKey" jdbcType="VARCHAR"/>
             <result property="secretKey" column="secretKey" jdbcType="VARCHAR"/>
-            <result property="is_develop" column="is_develop" jdbcType="TINYINT"/>
+            <result property="isDevelop" column="isDevelop" jdbcType="TINYINT"/>
             <result property="score" column="score" jdbcType="INTEGER"/>
             <result property="grade" column="grade" jdbcType="VARCHAR"/>
             <result property="registerChannel" column="registerChannel" jdbcType="VARCHAR"/>
@@ -20,7 +20,7 @@
 
     <sql id="Base_Column_List">
         id,userId,accessKey,
-        secretKey,is_develop,score,
+        secretKey,isDevelop,score,
         grade,registerChannel,createTime,updateTime,
         isDelete
     </sql>

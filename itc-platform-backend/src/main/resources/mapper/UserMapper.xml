@@ -11,6 +11,8 @@
         <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
         <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
         <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
+        <result property="userDescr" column="userDescr" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
         <result property="userStatus" column="userStatus" jdbcType="TINYINT"/>
@@ -19,7 +21,34 @@
 
     <sql id="Base_Column_List">
         id,unionId,mpOpenId,
-        userName,userAvatar,userProfile,
+        userName,userAvatar,userProfile,userDescr,address
         userRole,createTime,updateTime,userStatus,isDelete
     </sql>
+
+
+    <!-- 获取用户信息详情 -->
+    <select id="getUserVOMore" parameterType="long" resultType="com.noob.module.admin.user.model.vo.UserVO">
+        select
+            u.id,
+            u.userAccount,
+            u.userName,
+            u.userAvatar,
+            u.userProfile,
+            u.userDescr,
+            u.address,
+            u.userRole,
+            u.createTime,
+            u.updateTime,
+            u.userStatus,
+            ue.accessKey,
+            ue.secretKey,
+            ue.isDevelop,
+            ue.score,
+            ue.grade,
+            ue.registerChannel
+        from
+            user u
+                left join user_extend ue on ue.userId = u.id
+        where u.id = #{userId}
+    </select>
 </mapper>

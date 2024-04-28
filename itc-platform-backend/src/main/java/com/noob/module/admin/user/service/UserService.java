@@ -96,6 +96,13 @@ public interface UserService extends IService<User> {
     LoginUserVO getLoginUserVO(User user);
 
     /**
+     * 获取用户信息（更多详情）
+     *
+     * @return
+     */
+    UserVO getUserVOMore(long userId) ;
+
+    /**
      * 获取脱敏的用户信息
      *
      * @param user

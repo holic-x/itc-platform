@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -41,6 +42,9 @@ import org.springframework.util.DigestUtils;
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Resource
+    private UserMapper userMapper;
 
     @Resource
     private UserExtendService userExtendService;
@@ -251,6 +255,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    @Override
+    public UserVO getUserVOMore(long userId) {
+        UserVO findUserVO = userMapper.getUserVOMore(userId);
+        ThrowUtils.throwIf(findUserVO==null,ErrorCode.NOT_FOUND_ERROR,"用户信息不存在");
+        return findUserVO;
     }
 
     @Override
