@@ -3,11 +3,10 @@ package com.noob.module.front.api.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
-import com.noob.framework.common.BaseResponse;
-import com.noob.framework.common.DeleteRequest;
-import com.noob.framework.common.ErrorCode;
-import com.noob.framework.common.ResultUtils;
+import com.noob.framework.common.*;
 import com.noob.framework.constant.CommonConstant;
+import com.noob.module.admin.api.model.dto.HandleInterfaceInfoStatusRequest;
+import com.noob.module.admin.api.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
@@ -282,6 +281,23 @@ public class InterfaceInfoController {
     }
 
 
-
+    /**
+     * 发布接口
+     * @param idRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/publish")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> publishInterfaceInfo(@RequestBody IdRequest idRequest,
+                                              HttpServletRequest request) {
+        ThrowUtils.throwIf(idRequest==null,ErrorCode.PARAMS_ERROR);
+        // 校验参数信息
+        long interfaceId = idRequest.getId();
+        ThrowUtils.throwIf(interfaceId<0 ,ErrorCode.PARAMS_ERROR);
+        boolean result = interfaceInfoService.handleInterfaceInfoStatus(interfaceId, InterfaceInfoEnum.WAIT_AUDIT.getValue());
+        // 返回响应数据
+        return ResultUtils.success(result);
+    }
 
 }

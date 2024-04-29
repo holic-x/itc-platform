@@ -5,14 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
 import com.noob.framework.constant.CommonConstant;
-import com.noob.module.admin.api.model.dto.InterfaceInfoInvokeRequest;
+import com.noob.module.admin.api.model.dto.*;
 import com.noob.module.admin.api.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
-import com.noob.module.admin.api.model.dto.InterfaceInfoAddRequest;
-import com.noob.module.admin.api.model.dto.InterfaceInfoQueryRequest;
-import com.noob.module.admin.api.model.dto.InterfaceInfoUpdateRequest;
 import com.noob.module.admin.api.model.entity.InterfaceInfo;
 import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 import com.noob.module.admin.api.service.InterfaceInfoService;
@@ -27,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 /**
  * 接口信息
@@ -374,6 +372,28 @@ public class InterfaceInfoController {
         // 返回响应数据
         return ResultUtils.success(result);
     }
+
+
+    /**
+     * 更新状态:
+     * @param handleInterfaceInfoStatusRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/handleInterfaceInfoStatus")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> handleInterfaceInfoStatus(@RequestBody HandleInterfaceInfoStatusRequest handleInterfaceInfoStatusRequest,
+                                                      HttpServletRequest request) {
+        ThrowUtils.throwIf(handleInterfaceInfoStatusRequest==null,ErrorCode.PARAMS_ERROR);
+        // 校验参数信息
+        long interfaceId = handleInterfaceInfoStatusRequest.getId();
+        int status = handleInterfaceInfoStatusRequest.getStatus();
+        ThrowUtils.throwIf(interfaceId<0 ,ErrorCode.PARAMS_ERROR);
+        boolean result = interfaceInfoService.handleInterfaceInfoStatus(interfaceId,status);
+        // 返回响应数据
+        return ResultUtils.success(result);
+    }
+
 
     /**
      * 测试调用接口

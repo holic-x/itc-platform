@@ -17,4 +17,12 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
      */
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
+    /**
+     * 根据指定操作校验并修改接口状态
+     * @param interfaceInfoId
+     * @param status
+     * @return
+     */
+    public boolean handleInterfaceInfoStatus(long interfaceInfoId, int status);
+
 }
