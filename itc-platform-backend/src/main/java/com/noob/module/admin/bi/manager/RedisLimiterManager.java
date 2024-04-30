@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * @ClassName Huh-x
  * @Description 专门提供RedisLimiter限流基础服务（通用定义，可适用于一般的项目）
  * @Author Huh-x
  * @Date 2024 2024/4/19 16:02

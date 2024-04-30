@@ -89,11 +89,9 @@ public class PostFavourController {
      * 获取用户收藏的帖子列表
      *
      * @param postFavourQueryRequest
-     * @param request
      */
     @PostMapping("/list/page")
-    public BaseResponse<Page<PostVO>> listFavourPostByPage(@RequestBody PostFavourQueryRequest postFavourQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<PostVO>> listFavourPostByPage(@RequestBody PostFavourQueryRequest postFavourQueryRequest) {
         if (postFavourQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

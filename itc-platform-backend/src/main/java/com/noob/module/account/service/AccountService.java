@@ -5,8 +5,8 @@ import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @ClassName Huh-x
- * @Description TODO
+ * @ClassName
+ * @Description 账号管理相关
  * @Author Huh-x
  * @Date 2024 2024/4/30 14:19
  */
@@ -21,14 +21,10 @@ public interface AccountService {
      */
     LoginUserVO userLogin(String userAccount, String userPassword,HttpServletRequest request);
 
-
-
-
     /**
      * 用户注销
      *
-     * @param request
      * @return
      */
-    boolean userLogout(HttpServletRequest request);
+    void userLogout();
 }

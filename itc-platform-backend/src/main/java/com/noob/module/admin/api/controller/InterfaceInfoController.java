@@ -179,7 +179,6 @@ public class InterfaceInfoController {
      * 分页获取当前用户创建的资源列表
      *
      * @param interfaceInfoQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/my/list/page/vo")
@@ -207,7 +206,6 @@ public class InterfaceInfoController {
      * 3.修改数据库中接口信息状态为1
      *
      * @param idRequest
-     * @param request
      * @return
      */
     @PostMapping("/online")
@@ -257,7 +255,6 @@ public class InterfaceInfoController {
      * 更新状态:
      *
      * @param handleInterfaceInfoStatusRequest
-     * @param request
      * @return
      */
     @PostMapping("/handleInterfaceInfoStatus")

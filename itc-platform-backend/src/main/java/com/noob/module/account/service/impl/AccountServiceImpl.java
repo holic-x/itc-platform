@@ -23,7 +23,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @ClassName Huh-x
  * @Description TODO
  * @Author Huh-x
  * @Date 2024 2024/4/30 14:19
@@ -36,13 +35,6 @@ public class AccountServiceImpl implements AccountService {
      * 盐值，混淆密码
      */
     public static final String SALT = "noob";
-
-    @Resource
-    private UserMapper userMapper;
-
-    @Resource
-    private UserService userService;
-
 
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword,HttpServletRequest request) {
@@ -71,12 +63,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean userLogout(HttpServletRequest request) {
-        if (request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE) == null) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
+    public void userLogout() {
+        // ShiroUtil.deleteCache();
+
+        // 退出登陆
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            // 销毁SESSION(清理权限缓存)
+            subject.logout();
         }
-        // 移除登录态 todo
-        request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
-        return true;
     }
 }

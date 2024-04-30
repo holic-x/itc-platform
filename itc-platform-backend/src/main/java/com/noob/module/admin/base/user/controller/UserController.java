@@ -154,23 +154,6 @@ public class UserController {
          return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
-    /**
-     * 获取用户信息详情（获取当前登录用户）
-     * @return
-     */
-    @GetMapping("/account/getUserVOMoreByCurrentLoginUser")
-    public BaseResponse<UserVO> getUserVOMoreByCurrentLoginUser(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
-        // 获取用户信息详情
-        return ResultUtils.success(userService.getUserVOMore(currentUser.getId()));
-    }
-
-
     // endregion
 
     // region 增删改查
@@ -179,7 +162,6 @@ public class UserController {
      * 创建用户
      *
      * @param userAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")
@@ -240,12 +222,10 @@ public class UserController {
      * 更新用户
      *
      * @param userUpdateRequest
-     * @param request
      * @return
      */
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -268,7 +248,6 @@ public class UserController {
      * 根据 id 获取用户（仅管理员）
      *
      * @param id
-     * @param request
      * @return
      */
     @GetMapping("/get")
@@ -298,14 +277,12 @@ public class UserController {
      * 分页获取用户列表（仅管理员）
      *
      * @param userQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/list/page")
 //    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @RequiresRoles({UserConstant.ADMIN_ROLE})
-    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size),
@@ -317,12 +294,10 @@ public class UserController {
      * 分页获取用户封装列表
      *
      * @param userQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<UserVO>> getUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<UserVO>> getUserVOByPage(@RequestBody UserQueryRequest userQueryRequest) {
         if (userQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -344,12 +319,10 @@ public class UserController {
      * 更新个人信息
      *
      * @param userUpdateMyRequest
-     * @param request
      * @return
      */
     @PostMapping("/update/my")
-    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -368,12 +341,10 @@ public class UserController {
      * 更新用户状态信息
      *
      * @param userStatusUpdateRequest
-     * @param request
      * @return
      */
     @PostMapping("/handleUserStatus")
-    public BaseResponse<Boolean> handleUserStatus(@RequestBody UserStatusUpdateRequest userStatusUpdateRequest,
-                                              HttpServletRequest request) {
+    public BaseResponse<Boolean> handleUserStatus(@RequestBody UserStatusUpdateRequest userStatusUpdateRequest) {
         if (userStatusUpdateRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

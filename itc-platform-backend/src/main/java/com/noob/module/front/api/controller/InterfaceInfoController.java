@@ -227,8 +227,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoVOByPageForUser(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest,
-                                                                       HttpServletRequest request) {
+    public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoVOByPageForUser(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
         if (interfaceInfoQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -257,7 +256,6 @@ public class InterfaceInfoController {
      * 分页获取当前用户创建的资源列表
      *
      * @param interfaceInfoQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/my/list/page/vo")
@@ -286,8 +284,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/publish")
-    public BaseResponse<Boolean> publishInterfaceInfo(@RequestBody IdRequest idRequest,
-                                              HttpServletRequest request) {
+    public BaseResponse<Boolean> publishInterfaceInfo(@RequestBody IdRequest idRequest) {
         ThrowUtils.throwIf(idRequest==null,ErrorCode.PARAMS_ERROR);
         // 校验参数信息
         long interfaceId = idRequest.getId();

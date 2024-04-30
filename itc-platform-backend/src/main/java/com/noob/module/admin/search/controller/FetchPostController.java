@@ -35,7 +35,6 @@ public class FetchPostController {
     /**
      * 数据抓取（通过爬虫从指定网站获取数据）
      *
-     * @param request
      * @return
      */
     @PostMapping("/dataCapture")
@@ -49,7 +48,6 @@ public class FetchPostController {
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
@@ -88,7 +86,6 @@ public class FetchPostController {
      * 分页搜索（从 ES 查询，封装类）
      *
      * @param fetchPostQueryRequest
-     * @param request
      * @return
      */
     /*
@@ -103,60 +100,12 @@ public class FetchPostController {
     }
     */
 
-
-    /**
-     * 更新文章状态
-     *
-     * @param fetchPostStatusUpdateRequest
-     * @param request
-     * @return
-     */
-    /*
-    @PostMapping("/handleFetchPostStatus")
-    public BaseResponse<Boolean> handleFetchPostStatus(@RequestBody FetchPostStatusUpdateRequest fetchPostStatusUpdateRequest,
-                                                  HttpServletRequest request) {
-        if (fetchPostStatusUpdateRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-
-        Long fetchPostId = fetchPostStatusUpdateRequest.getId();
-        FetchPost findFetchPost = fetchPostService.getById(fetchPostId);
-        if (findFetchPost == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR,"文章信息不存在");
-        }
-
-        // 根据指定操作更新文章信息（此处根据操作类型更新文章状态信息）
-        FetchPost fetchPost = new FetchPost();
-        fetchPost.setId(fetchPostId);
-        fetchPost.setUpdateTime(new Date());
-        String operType = fetchPostStatusUpdateRequest.getOperType();
-        Integer currentUserStatus = fetchPost.getStatus();
-        if("publish".equals(operType)){
-            // 校验当前状态，避免重复发布
-            if(currentUserStatus== FetchPostConstant.POST_STATUS_PUBLISH){
-                throw new BusinessException(ErrorCode.OPERATION_ERROR,"当前文章已发布，请勿重复操作");
-            }
-            fetchPost.setStatus(FetchPostConstant.POST_STATUS_PUBLISH);
-            fetchPostService.updateById(fetchPost);
-        }else if("draft".equals(operType)){
-            fetchPost.setStatus(FetchPostConstant.POST_STATUS_DRAFT);
-            fetchPostService.updateById(fetchPost);
-        }else {
-            // 其余操作类型则不允许操作
-            throw new BusinessException(ErrorCode.OPERATION_ERROR,"指定操作类型错误，请联系管理员处理");
-        }
-        return ResultUtils.success(true);
-    }
-
-     */
-
     // --------------- 批量操作定义 ---------------
 
     /**
      * 批量删除文章
      *
      * @param batchDeleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/batchDeleteFetchPost")

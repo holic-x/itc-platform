@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * 权限校验 AOP
  *
  */
+@Deprecated
 @Aspect
 @Component
 public class AuthInterceptor {

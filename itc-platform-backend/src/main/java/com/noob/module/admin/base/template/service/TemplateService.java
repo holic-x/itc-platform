@@ -36,7 +36,6 @@ public interface TemplateService extends IService<Template> {
      * 获取封装
      *
      * @param template
-     * @param request
      * @return
      */
     TemplateVO getTemplateVO(Template template);
@@ -45,7 +44,6 @@ public interface TemplateService extends IService<Template> {
      * 分页获取模板封装
      *
      * @param templatePage
-     * @param request
      * @return
      */
     Page<TemplateVO> getTemplateVOPage(Page<Template> templatePage);

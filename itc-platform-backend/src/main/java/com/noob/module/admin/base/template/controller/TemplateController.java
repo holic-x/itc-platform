@@ -159,12 +159,10 @@ public class TemplateController {
      * 分页获取列表（封装类）
      *
      * @param templateQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<TemplateVO>> listTemplateVOByPage(@RequestBody TemplateQueryRequest templateQueryRequest,
-                                                               HttpServletRequest request) {
+    public BaseResponse<Page<TemplateVO>> listTemplateVOByPage(@RequestBody TemplateQueryRequest templateQueryRequest) {
         long current = templateQueryRequest.getCurrent();
         long size = templateQueryRequest.getPageSize();
         // 限制爬虫

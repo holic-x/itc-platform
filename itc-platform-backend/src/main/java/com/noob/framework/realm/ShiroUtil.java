@@ -12,7 +12,6 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 
 /**
- * @ClassName Huh-x
  * @Description 自定义Shiro工具类处理登陆相关
  * @Author Huh-x
  * @Date 2024 2024/4/30 15:34

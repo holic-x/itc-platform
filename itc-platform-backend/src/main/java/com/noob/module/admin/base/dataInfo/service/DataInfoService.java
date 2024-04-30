@@ -36,7 +36,6 @@ public interface DataInfoService extends IService<DataInfo> {
      * 获取封装
      *
      * @param dataInfo
-     * @param request
      * @return
      */
     DataInfoVO getDataInfoVO(DataInfo dataInfo);
@@ -45,7 +44,6 @@ public interface DataInfoService extends IService<DataInfo> {
      * 分页获取数据封装
      *
      * @param dataInfoPage
-     * @param request
      * @return
      */
     Page<DataInfoVO> getDataInfoVOPage(Page<DataInfo> dataInfoPage);

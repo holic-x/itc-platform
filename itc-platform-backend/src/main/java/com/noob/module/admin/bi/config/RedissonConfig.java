@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @ClassName Huh-x
  * @Description TODO
  * @Author Huh-x
  * @Date 2024 2024/4/19 15:37

@@ -51,7 +51,6 @@ public class FetchPostController {
      * 分页搜索（从 ES 查询，封装类）
      *
      * @param fetchPostQueryRequest
-     * @param request
      * @return
      */
     /*

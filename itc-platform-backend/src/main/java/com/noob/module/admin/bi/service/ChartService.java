@@ -37,7 +37,6 @@ public interface ChartService extends IService<Chart> {
      * 获取图表封装
      *
      * @param chart
-     * @param request
      * @return
      */
     ChartVO getChartVO(Chart chart);
@@ -46,7 +45,6 @@ public interface ChartService extends IService<Chart> {
      * 分页获取图表封装
      *
      * @param chartPage
-     * @param request
      * @return
      */
     Page<ChartVO> getChartVOPage(Page<Chart> chartPage);

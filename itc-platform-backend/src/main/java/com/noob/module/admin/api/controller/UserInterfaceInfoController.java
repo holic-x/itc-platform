@@ -48,7 +48,6 @@ public class UserInterfaceInfoController {
      * 创建
      *
      * @param userInterfaceInfoAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")

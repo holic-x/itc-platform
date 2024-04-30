@@ -45,7 +45,6 @@ public class PostController {
      * 创建
      *
      * @param postAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")
@@ -161,7 +160,6 @@ public class PostController {
      * 分页获取列表（封装类）
      *
      * @param postQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/list/page/vo")

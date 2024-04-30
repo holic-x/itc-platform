@@ -196,7 +196,6 @@ public class DataInfoController {
      * 更新数据状态
      *
      * @param dataInfoStatusUpdateRequest
-     * @param request
      * @return
      */
     @PostMapping("/handleDataInfoStatus")
@@ -239,7 +238,6 @@ public class DataInfoController {
      * 批量删除数据
      *
      * @param batchDeleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/batchDeleteDataInfo")

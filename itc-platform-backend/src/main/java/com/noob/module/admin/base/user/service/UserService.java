@@ -34,7 +34,6 @@ public interface UserService extends IService<User> {
      *
      * @param userAccount  用户账户
      * @param userPassword 用户密码
-     * @param request
      * @return 脱敏后的用户信息
      */
     LoginUserVO userLogin(String userAccount, String userPassword,HttpServletRequest request);
@@ -43,7 +42,6 @@ public interface UserService extends IService<User> {
      * 用户登录（微信开放平台）
      *
      * @param wxOAuth2UserInfo 从微信获取的用户信息
-     * @param request
      * @return 脱敏后的用户信息
      */
     LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo,HttpServletRequest request);
@@ -51,7 +49,6 @@ public interface UserService extends IService<User> {
     /**
      * 获取当前登录用户
      *
-     * @param request
      * @return
      */
     User getLoginUser(HttpServletRequest request);
@@ -59,7 +56,7 @@ public interface UserService extends IService<User> {
     /**
      * 获取当前登录用户（允许未登录）
      *
-     * @param request
+     * @param redquest
      * @return
      */
     User getLoginUserPermitNull(HttpServletRequest request);
