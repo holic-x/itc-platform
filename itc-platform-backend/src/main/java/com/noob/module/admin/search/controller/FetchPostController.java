@@ -21,7 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 抓取帖子接口
+ * 抓取帖子接口(对抓取的帖子信息进行管理跟踪)
+ * 帖子信息管理、ES数据同步状态跟踪
  */
 @RestController("admin-FetchPostController")
 @RequestMapping("/admin/fetchPost")
