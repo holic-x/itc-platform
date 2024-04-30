@@ -107,3 +107,4 @@ knife4j:
           - com.noob.module.admin.search.controller
           - com.noob.module.front.search.controller
           - com.noob.module.front.api.controller
+          - com.noob.module.account.controller
