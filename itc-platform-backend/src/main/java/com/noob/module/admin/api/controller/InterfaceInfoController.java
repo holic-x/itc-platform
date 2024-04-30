@@ -173,38 +173,36 @@ public class InterfaceInfoController {
         if (interfaceInfoQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        InterfaceInfo interfaceInfoQuery = new InterfaceInfo();
-        BeanUtils.copyProperties(interfaceInfoQueryRequest, interfaceInfoQuery);
+
+        // 校验请求参数，筛选条件封装
         long current = interfaceInfoQueryRequest.getCurrent();
         long size = interfaceInfoQueryRequest.getPageSize();
         String sortField = interfaceInfoQueryRequest.getSortField();
         String sortOrder = interfaceInfoQueryRequest.getSortOrder();
-        String description = interfaceInfoQuery.getDescription();
+        String description = interfaceInfoQueryRequest.getDescription();
+        // status为-1默认筛选所有数据（为其他状态则进行拼接）
+        int status = interfaceInfoQueryRequest.getStatus();
 
-        // 如果status为null，无法直接用int接收，需要String做处理
-        int status = interfaceInfoQuery.getStatus();
-
-        // description 需支持模糊搜索
-        interfaceInfoQuery.setDescription(null);
         // 限制爬虫
         if (size > 50) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-//        QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>(interfaceInfoQuery);
+
+        // 封装筛选条件（按需封装）
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(StringUtils.isNotBlank(description), "description", description);
         queryWrapper.orderBy(StringUtils.isNotBlank(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         // 根据状态进行分类检索,如果传入status为-1则默认检索所有内容,如果为其他状态则默认拼接SQL
-        queryWrapper.eq(status!=-1,"status", status);
-
-
+        queryWrapper.eq(status != -1, "status", status);
+        // 获取分页数据
         Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size), queryWrapper);
         return ResultUtils.success(interfaceInfoPage);
     }
 
     /**
      * 分页获取列表（限定用户）
+     *
      * @param interfaceInfoQueryRequest
      * @return
      */
@@ -385,6 +383,7 @@ public class InterfaceInfoController {
 
     /**
      * 更新状态:
+     *
      * @param handleInterfaceInfoStatusRequest
      * @param request
      * @return
@@ -392,13 +391,13 @@ public class InterfaceInfoController {
     @PostMapping("/handleInterfaceInfoStatus")
     @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> handleInterfaceInfoStatus(@RequestBody HandleInterfaceInfoStatusRequest handleInterfaceInfoStatusRequest,
-                                                      HttpServletRequest request) {
-        ThrowUtils.throwIf(handleInterfaceInfoStatusRequest==null,ErrorCode.PARAMS_ERROR);
+                                                           HttpServletRequest request) {
+        ThrowUtils.throwIf(handleInterfaceInfoStatusRequest == null, ErrorCode.PARAMS_ERROR);
         // 校验参数信息
         long interfaceId = handleInterfaceInfoStatusRequest.getId();
         int status = handleInterfaceInfoStatusRequest.getStatus();
-        ThrowUtils.throwIf(interfaceId<0 ,ErrorCode.PARAMS_ERROR);
-        boolean result = interfaceInfoService.handleInterfaceInfoStatus(interfaceId,status);
+        ThrowUtils.throwIf(interfaceId < 0, ErrorCode.PARAMS_ERROR);
+        boolean result = interfaceInfoService.handleInterfaceInfoStatus(interfaceId, status);
         // 返回响应数据
         return ResultUtils.success(result);
     }
@@ -429,7 +428,6 @@ public class InterfaceInfoController {
         if (oldInterfaceInfo.getStatus() == InterfaceInfoEnum.OFFLINE.getValue()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
         }
-
 
 
         // todo 模拟调用访问接口测试
