@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
 import com.noob.framework.constant.CommonConstant;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.api.model.dto.*;
 import com.noob.module.admin.api.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.base.user.constant.UserConstant;
@@ -15,6 +16,7 @@ import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 import com.noob.module.admin.api.service.InterfaceInfoService;
 import com.noob.module.admin.api.service.UserInterfaceInfoService;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -56,13 +58,12 @@ public class InterfaceInfoController {
      * 创建
      *
      * @param interfaceInfoAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addInterfaceInfo(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addInterfaceInfo(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest) {
         // 调用方法获取新增接口信息
-        long newInterfaceInfoId = interfaceInfoService.addInterfaceInfo(interfaceInfoAddRequest,request);
+        long newInterfaceInfoId = interfaceInfoService.addInterfaceInfo(interfaceInfoAddRequest);
         return ResultUtils.success(newInterfaceInfoId);
     }
 
@@ -70,21 +71,20 @@ public class InterfaceInfoController {
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteInterfaceInfo(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteInterfaceInfo(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = deleteRequest.getId();
         // 判断是否存在
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
         ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldInterfaceInfo.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = interfaceInfoService.removeById(id);
@@ -98,7 +98,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateInterfaceInfo(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> updateInterfaceInfo(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest) {
         if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -106,7 +106,7 @@ public class InterfaceInfoController {
         BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
         // 参数校验
         interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = interfaceInfoUpdateRequest.getId();
         // 判断是否存在
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
@@ -114,7 +114,7 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 仅本人或管理员可修改
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldInterfaceInfo.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = interfaceInfoService.updateById(interfaceInfo);
@@ -128,7 +128,7 @@ public class InterfaceInfoController {
      * @return
      */
     @GetMapping("/get/")
-    public BaseResponse<InterfaceInfo> getInterfaceInfoVOById(long id, HttpServletRequest request) {
+    public BaseResponse<InterfaceInfo> getInterfaceInfoVOById(long id ) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -143,7 +143,6 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/list/page")
-//    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoByPage(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
         if (interfaceInfoQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -184,8 +183,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<InterfaceInfo>> listMyInterfaceInfoVOByPage(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest,
-                                                                         HttpServletRequest request) {
+    public BaseResponse<Page<InterfaceInfo>> listMyInterfaceInfoVOByPage(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
 //        if (interfaceInfoQueryRequest == null) {
 //            throw new BusinessException(ErrorCode.PARAMS_ERROR);
 //        }
@@ -213,9 +211,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/online")
-    @AuthCheck(mustRole = "admin")
-    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
-                                                     HttpServletRequest request) throws UnsupportedEncodingException {
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest) throws UnsupportedEncodingException {
         if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -265,9 +261,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/handleInterfaceInfoStatus")
-//    @AuthCheck(mustRole = "admin")
-    public BaseResponse<Boolean> handleInterfaceInfoStatus(@RequestBody HandleInterfaceInfoStatusRequest handleInterfaceInfoStatusRequest,
-                                                           HttpServletRequest request) {
+    public BaseResponse<Boolean> handleInterfaceInfoStatus(@RequestBody HandleInterfaceInfoStatusRequest handleInterfaceInfoStatusRequest) {
         ThrowUtils.throwIf(handleInterfaceInfoStatusRequest == null, ErrorCode.PARAMS_ERROR);
         // 校验参数信息
         long interfaceId = handleInterfaceInfoStatusRequest.getId();
@@ -283,12 +277,10 @@ public class InterfaceInfoController {
      * 测试调用接口
      *
      * @param interfaceInfoInvokeRequest 封装一个参数InterfaceInfoInvokeRequest用于接收前端请求调用的参数信息
-     * @param request
      * @return 返回结果直接将响应结果返回，因为实际情况并不确定接口的返回值到底是什么，只需要将结果数据返回即可
      */
     @PostMapping("/invoke")
-    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
-                                                    HttpServletRequest request) throws UnsupportedEncodingException {
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest) throws UnsupportedEncodingException {
         // 检查请求对象是否为空或者接口id是否小于等于0
         if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

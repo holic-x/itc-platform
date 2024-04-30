@@ -1,5 +1,6 @@
 package com.noob.framework.realm;
 
+import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.Authenticator;
@@ -16,12 +17,12 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
  * @Author Huh-x
  * @Date 2024 2024/4/30 15:34
  */
-public class SingleShiroUtil {
+public class ShiroUtil {
 
     /**
      * 私有构造器
      **/
-    private SingleShiroUtil() {
+    private ShiroUtil() {
     }
 
 
@@ -55,6 +56,7 @@ public class SingleShiroUtil {
         getSubject().logout();
     }
 
+
     /**
      * 获取当前用户信息(与ShiroRealm中存入的内容相对应)
      **/
@@ -67,6 +69,14 @@ public class SingleShiroUtil {
      **/
     public static long getCurrentUserId() {
         return getCurrentUser().getId();
+    }
+
+    /**
+     * 判断当前登陆用户是否为管理员
+     */
+    public static boolean isAdmin() {
+        LoginUserVO currentUser = (LoginUserVO) getSubject().getPrincipal();
+        return UserConstant.ADMIN_ROLE.equals(currentUser.getUserRole());
     }
 
     /**

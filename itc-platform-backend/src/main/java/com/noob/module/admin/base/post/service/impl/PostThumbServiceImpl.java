@@ -3,6 +3,7 @@ package com.noob.module.admin.base.post.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.common.ErrorCode;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.base.post.mapper.PostThumbMapper;
 import com.noob.module.admin.base.post.model.entity.Post;
 import com.noob.module.admin.base.post.model.entity.PostThumb;
@@ -12,6 +13,8 @@ import com.noob.module.admin.base.post.service.PostThumbService;
 import com.noob.framework.exception.BusinessException;
 
 import javax.annotation.Resource;
+
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,23 +34,22 @@ public class PostThumbServiceImpl extends ServiceImpl<PostThumbMapper, PostThumb
      * 点赞
      *
      * @param postId
-     * @param loginUser
      * @return
      */
     @Override
-    public int doPostThumb(long postId, User loginUser) {
+    public int doPostThumb(long postId ) {
         // 判断实体是否存在，根据类别获取实体
         Post post = postService.getById(postId);
         if (post == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 是否已点赞
-        long userId = loginUser.getId();
+        long currentUserId = ShiroUtil.getCurrentUserId();
         // 每个用户串行点赞
         // 锁必须要包裹住事务方法
         PostThumbService postThumbService = (PostThumbService) AopContext.currentProxy();
-        synchronized (String.valueOf(userId).intern()) {
-            return postThumbService.doPostThumbInner(userId, postId);
+        synchronized (String.valueOf(currentUserId).intern()) {
+            return postThumbService.doPostThumbInner(currentUserId, postId);
         }
     }
 

@@ -40,7 +40,7 @@ public interface ChartService extends IService<Chart> {
      * @param request
      * @return
      */
-    ChartVO getChartVO(Chart chart, HttpServletRequest request);
+    ChartVO getChartVO(Chart chart);
 
     /**
      * 分页获取图表封装
@@ -49,7 +49,7 @@ public interface ChartService extends IService<Chart> {
      * @param request
      * @return
      */
-    Page<ChartVO> getChartVOPage(Page<Chart> chartPage, HttpServletRequest request);
+    Page<ChartVO> getChartVOPage(Page<Chart> chartPage);
     
 
 }

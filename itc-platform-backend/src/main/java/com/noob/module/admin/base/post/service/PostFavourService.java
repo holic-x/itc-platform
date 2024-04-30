@@ -18,10 +18,9 @@ public interface PostFavourService extends IService<PostFavour> {
      * 帖子收藏
      *
      * @param postId
-     * @param loginUser
      * @return
      */
-    int doPostFavour(long postId, User loginUser);
+    int doPostFavour(long postId);
 
     /**
      * 分页获取用户收藏的帖子列表

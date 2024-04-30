@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
 import com.noob.framework.constant.CommonConstant;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.api.model.dto.HandleInterfaceInfoStatusRequest;
 import com.noob.module.admin.api.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.base.user.constant.UserConstant;
@@ -18,6 +19,7 @@ import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 import com.noob.module.admin.api.service.InterfaceInfoService;
 import com.noob.module.admin.api.service.UserInterfaceInfoService;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -51,11 +53,10 @@ public class InterfaceInfoController {
      * 创建
      *
      * @param interfaceInfoAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addInterfaceInfoForUser(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addInterfaceInfoForUser(@RequestBody InterfaceInfoAddRequest interfaceInfoAddRequest) {
         if (interfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -63,8 +64,8 @@ public class InterfaceInfoController {
         BeanUtils.copyProperties(interfaceInfoAddRequest, interfaceInfo);
         // 校验
         interfaceInfoService.validInterfaceInfo(interfaceInfo, true);
-        User loginUser = userService.getLoginUser(request);
-        interfaceInfo.setUserId(loginUser.getId());
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        interfaceInfo.setUserId(currentUser.getId());
         boolean result = interfaceInfoService.save(interfaceInfo);
         if (!result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "新增接口失败");
@@ -74,7 +75,7 @@ public class InterfaceInfoController {
         // 用户新增接口默认为其分配接口调用次数
         UserInterfaceInfo userInterfaceInfo = new UserInterfaceInfo();
         userInterfaceInfo.setInterfaceInfoId(newInterfaceInfoId);
-        userInterfaceInfo.setUserId(loginUser.getId());
+        userInterfaceInfo.setUserId(currentUser.getId());
         userInterfaceInfo.setTotalNum(0);
         userInterfaceInfo.setLeftNum(100);
         userInterfaceInfo.setIsDelete(0);
@@ -89,21 +90,20 @@ public class InterfaceInfoController {
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteInterfaceInfoForUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteInterfaceInfoForUser(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = deleteRequest.getId();
         // 判断是否存在
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
         ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldInterfaceInfo.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = interfaceInfoService.removeById(id);
@@ -117,8 +117,7 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateInterfaceInfoForUser(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> updateInterfaceInfoForUser(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest) {
         if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -126,7 +125,7 @@ public class InterfaceInfoController {
         BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
         // 参数校验
         interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = interfaceInfoUpdateRequest.getId();
         // 判断是否存在
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
@@ -134,7 +133,7 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 仅本人或管理员可修改
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldInterfaceInfo.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = interfaceInfoService.updateById(interfaceInfo);
@@ -148,7 +147,7 @@ public class InterfaceInfoController {
      * @return
      */
     @GetMapping("/get/")
-    public BaseResponse<InterfaceInfo> getInterfaceInfoVOById(long id, HttpServletRequest request) {
+    public BaseResponse<InterfaceInfo> getInterfaceInfoVOById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -163,7 +162,6 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoByPageForUser(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
         if (interfaceInfoQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -288,7 +286,6 @@ public class InterfaceInfoController {
      * @return
      */
     @PostMapping("/publish")
-    @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> publishInterfaceInfo(@RequestBody IdRequest idRequest,
                                               HttpServletRequest request) {
         ThrowUtils.throwIf(idRequest==null,ErrorCode.PARAMS_ERROR);

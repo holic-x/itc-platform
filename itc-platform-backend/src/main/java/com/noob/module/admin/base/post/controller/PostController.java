@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
 import com.noob.framework.constant.PostConstant;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.base.post.model.dto.post.*;
 import com.noob.module.admin.base.post.model.entity.Post;
 import com.noob.module.admin.base.post.model.vo.PostVO;
@@ -13,6 +14,7 @@ import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.post.service.PostService;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -47,7 +49,7 @@ public class PostController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addPost(@RequestBody PostAddRequest postAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addPost(@RequestBody PostAddRequest postAddRequest) {
         if (postAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -60,8 +62,9 @@ public class PostController {
         // 设置文章状态
         post.setStatus(PostConstant.POST_STATUS_DRAFT);
         postService.validPost(post, true);
-        User loginUser = userService.getLoginUser(request);
-        post.setUserId(loginUser.getId());
+
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        post.setUserId(currentUser.getId());
         post.setFavourNum(0);
         post.setThumbNum(0);
         boolean result = postService.save(post);
@@ -74,21 +77,20 @@ public class PostController {
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deletePost(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deletePost(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = deleteRequest.getId();
         // 判断是否存在
         Post oldPost = postService.getById(id);
         ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldPost.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldPost.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = postService.removeById(id);
@@ -102,7 +104,6 @@ public class PostController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         if (postUpdateRequest == null || postUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -130,7 +131,7 @@ public class PostController {
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<PostVO> getPostVOById(long id, HttpServletRequest request) {
+    public BaseResponse<PostVO> getPostVOById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -138,7 +139,7 @@ public class PostController {
         if (post == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        return ResultUtils.success(postService.getPostVO(post, request));
+        return ResultUtils.success(postService.getPostVO(post));
     }
 
     /**
@@ -148,7 +149,6 @@ public class PostController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
@@ -165,39 +165,36 @@ public class PostController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.page(new Page<>(current, size),
                 postService.getQueryWrapper(postQueryRequest));
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        return ResultUtils.success(postService.getPostVOPage(postPage));
     }
 
     /**
      * 分页获取当前用户创建的资源列表
      *
      * @param postQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryRequest postQueryRequest) {
         if (postQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
-        postQueryRequest.setUserId(loginUser.getId());
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        postQueryRequest.setUserId(currentUser.getId());
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.page(new Page<>(current, size),
                 postService.getQueryWrapper(postQueryRequest));
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        return ResultUtils.success(postService.getPostVOPage(postPage));
     }
 
     // endregion
@@ -206,28 +203,25 @@ public class PostController {
      * 分页搜索（从 ES 查询，封装类）
      *
      * @param postQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/search/page/vo")
-    public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Post> postPage = postService.searchFromEs(postQueryRequest);
-        return ResultUtils.success(postService.getPostVOPage(postPage, request));
+        return ResultUtils.success(postService.getPostVOPage(postPage));
     }
 
     /**
      * 编辑（文章）
      *
      * @param postEditRequest
-     * @param request
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editPost(@RequestBody PostEditRequest postEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editPost(@RequestBody PostEditRequest postEditRequest) {
         if (postEditRequest == null || postEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -239,13 +233,14 @@ public class PostController {
         }
         // 参数校验
         postService.validPost(post, false);
-        User loginUser = userService.getLoginUser(request);
+
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = postEditRequest.getId();
         // 判断是否存在
         Post oldPost = postService.getById(id);
         ThrowUtils.throwIf(oldPost == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldPost.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!oldPost.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 设置更新时间
@@ -258,12 +253,10 @@ public class PostController {
      * 更新文章状态
      *
      * @param postStatusUpdateRequest
-     * @param request
      * @return
      */
     @PostMapping("/handlePostStatus")
-    public BaseResponse<Boolean> handlePostStatus(@RequestBody PostStatusUpdateRequest postStatusUpdateRequest,
-                                                  HttpServletRequest request) {
+    public BaseResponse<Boolean> handlePostStatus(@RequestBody PostStatusUpdateRequest postStatusUpdateRequest) {
         if (postStatusUpdateRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -302,12 +295,10 @@ public class PostController {
      * 批量删除文章
      *
      * @param batchDeleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/batchDeletePost")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> batchDeletePost(@RequestBody BatchDeleteRequest batchDeleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> batchDeletePost(@RequestBody BatchDeleteRequest batchDeleteRequest) {
         if (batchDeleteRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

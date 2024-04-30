@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.common.ErrorCode;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.base.post.mapper.PostFavourMapper;
 import com.noob.module.admin.base.post.model.entity.Post;
 import com.noob.module.admin.base.post.model.entity.PostFavour;
@@ -15,6 +16,8 @@ import com.noob.module.admin.base.post.service.PostService;
 import com.noob.framework.exception.BusinessException;
 
 import javax.annotation.Resource;
+
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,18 +37,18 @@ public class PostFavourServiceImpl extends ServiceImpl<PostFavourMapper, PostFav
      * 帖子收藏
      *
      * @param postId
-     * @param loginUser
      * @return
      */
     @Override
-    public int doPostFavour(long postId, User loginUser) {
+    public int doPostFavour(long postId) {
         // 判断是否存在
         Post post = postService.getById(postId);
         if (post == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 是否已帖子收藏
-        long userId = loginUser.getId();
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        long userId = currentUser.getId();
         // 每个用户串行帖子收藏
         // 锁必须要包裹住事务方法
         PostFavourService postFavourService = (PostFavourService) AopContext.currentProxy();

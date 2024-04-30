@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.*;
 import com.noob.framework.exception.ThrowUtils;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.base.user.model.dto.*;
 import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
@@ -89,7 +90,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,HttpServletRequest request) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -182,8 +183,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -217,19 +217,17 @@ public class UserController {
      * 删除用户
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         // 校验用户操作更新对象是否为本人账号（一定程度上限制其更新操作，额外提供接口更新自己的信息）
-        User loginUser = userService.getLoginUser(request);
-        if(loginUser.getId().equals(deleteRequest.getId())) {
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        if(currentUser.getId().equals(deleteRequest.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"不允许用户更改自己的信息");
         }
 
@@ -246,7 +244,6 @@ public class UserController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
             HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -254,8 +251,8 @@ public class UserController {
         }
 
         // 校验用户操作更新对象是否为本人账号（一定程度上限制其更新操作，额外提供接口更新自己的信息）
-        User loginUser = userService.getLoginUser(request);
-        if(loginUser.getId().equals(userUpdateRequest.getId())) {
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        if(currentUser.getId().equals(userUpdateRequest.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"不允许用户更改自己的信息");
         }
 
@@ -275,8 +272,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/get")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(long id, HttpServletRequest request) {
+    public BaseResponse<User> getUserById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -289,12 +285,11 @@ public class UserController {
      * 根据 id 获取包装类
      *
      * @param id
-     * @param request
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
-        BaseResponse<User> response = getUserById(id, request);
+    public BaseResponse<UserVO> getUserVOById(long id) {
+        BaseResponse<User> response = getUserById(id);
         User user = response.getData();
         return ResultUtils.success(userService.getUserVO(user));
     }
@@ -358,10 +353,10 @@ public class UserController {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);
-        user.setId(loginUser.getId());
+        user.setId(currentUser.getId());
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
@@ -384,8 +379,8 @@ public class UserController {
         }
 
         // 校验用户操作更新对象是否为本人账号（一定程度上限制其更新操作，额外提供接口更新自己的信息）
-        User loginUser = userService.getLoginUser(request);
-        if(loginUser.getId().equals(userStatusUpdateRequest.getId())) {
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        if(currentUser.getId().equals(userStatusUpdateRequest.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"不允许用户更改自己的信息");
         }
 
@@ -431,19 +426,17 @@ public class UserController {
      * 批量删除用户
      *
      * @param batchDeleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/batchDeleteUser")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> batchDeleteUser(@RequestBody BatchDeleteRequest batchDeleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> batchDeleteUser(@RequestBody BatchDeleteRequest batchDeleteRequest) {
         if (batchDeleteRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
 
         // 校验用户操作更新对象是否为本人账号（一定程度上限制其更新操作，额外提供接口更新自己的信息）
-        User loginUser = userService.getLoginUser(request);
-        if(batchDeleteRequest.getIdList().contains(loginUser.getId())) {
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        if(batchDeleteRequest.getIdList().contains(currentUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR,"不允许用户更改自己的信息");
         }
 

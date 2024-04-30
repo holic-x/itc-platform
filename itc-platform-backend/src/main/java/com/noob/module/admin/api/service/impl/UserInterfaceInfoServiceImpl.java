@@ -6,11 +6,13 @@ import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.api.mapper.UserInterfaceInfoMapper;
 import com.noob.module.admin.api.model.dto.UserInterfaceInfoAddRequest;
 import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 import com.noob.module.admin.api.service.UserInterfaceInfoService;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
     }
 
     @Override
-    public long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest, HttpServletRequest request) {
+    public long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest) {
         if (userInterfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -54,8 +56,8 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         BeanUtils.copyProperties(userInterfaceInfoAddRequest, userInterfaceInfo);
         // 校验
         validUserInterfaceInfo(userInterfaceInfo, true);
-        User loginUser = userService.getLoginUser(request);
-        userInterfaceInfo.setUserId(loginUser.getId());
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        userInterfaceInfo.setUserId(currentUser.getId());
 
         boolean result = this.save(userInterfaceInfo);
         ThrowUtils.throwIf(!result,ErrorCode.OPERATION_ERROR,"用户接口调用信息添加失败");

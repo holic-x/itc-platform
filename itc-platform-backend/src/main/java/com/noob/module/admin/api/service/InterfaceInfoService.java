@@ -25,7 +25,7 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
      * 添加接口信息
      * @param interfaceInfoAddRequest
      */
-    long addInterfaceInfo(InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request);
+    long addInterfaceInfo(InterfaceInfoAddRequest interfaceInfoAddRequest);
 
     /**
      * 根据指定操作校验并修改接口状态

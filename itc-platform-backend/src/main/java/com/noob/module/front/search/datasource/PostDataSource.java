@@ -38,9 +38,11 @@ public class PostDataSource implements DataSource<PostVO> {
          * 2.尽量自主获取到参数信息，此处借助RequestContextHolder获取请求信息从而拿到所需数据，但也会引申一个问题：当请求来源不同的时候这个request可能和系统所需的有所出入
          * 3.修改规范：确认其他接口是否也是需要这个参数，但这个改造成本可能在后期会显得大，因为一些现有的接口已经按照既定规范执行，唯恐牵一发动全身
          */
-        ServletRequestAttributes servletRequestAttributes =  (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = servletRequestAttributes.getRequest();
+//        ServletRequestAttributes servletRequestAttributes =  (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = servletRequestAttributes.getRequest();
+
+
         Page<Post> postPage = postService.searchFromEs(postQueryRequest);
-        return postService.getPostVOPage(postPage, request);
+        return postService.getPostVOPage(postPage);
     }
 }

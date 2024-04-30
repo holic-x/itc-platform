@@ -11,10 +11,12 @@ import com.noob.framework.common.ResultUtils;
 import com.noob.framework.constant.CommonConstant;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.framework.utils.ExcelUtils;
 import com.noob.framework.utils.SqlUtils;
 import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import com.noob.module.admin.bi.bizmq.BiMessageProducer;
 import com.noob.module.admin.bi.manager.AiManager;
@@ -75,18 +77,17 @@ public class ChartController {
      * 创建
      *
      * @param chartAddRequest
-     * @param request
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addChart(@RequestBody ChartAddRequest chartAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addChart(@RequestBody ChartAddRequest chartAddRequest) {
         if (chartAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Chart chart = new Chart();
         BeanUtils.copyProperties(chartAddRequest, chart);
-        User loginUser = userService.getLoginUser(request);
-        chart.setUserId(loginUser.getId());
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        chart.setUserId(currentUser.getId());
         boolean result = chartService.save(chart);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         long newChartId = chart.getId();
@@ -97,21 +98,20 @@ public class ChartController {
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteChart(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteChart(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = deleteRequest.getId();
         // 判断是否存在
         Chart oldChart = chartService.getById(id);
         ThrowUtils.throwIf(oldChart == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldChart.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldChart.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = chartService.removeById(id);
@@ -125,7 +125,6 @@ public class ChartController {
      * @return
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateChart(@RequestBody ChartUpdateRequest chartUpdateRequest) {
         if (chartUpdateRequest == null || chartUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -147,7 +146,7 @@ public class ChartController {
      * @return
      */
     @GetMapping("/get")
-    public BaseResponse<Chart> getChartVOById(long id, HttpServletRequest request) {
+    public BaseResponse<Chart> getChartVOById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -165,7 +164,6 @@ public class ChartController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Chart>> listChartByPage(@RequestBody ChartQueryRequest chartQueryRequest) {
         long current = chartQueryRequest.getCurrent();
         long size = chartQueryRequest.getPageSize();
@@ -179,16 +177,16 @@ public class ChartController {
      * 分页获取当前用户创建的资源列表
      *
      * @param chartQueryRequest
-     * @param request
      * @return
      */
     @PostMapping("/my/list/page")
-    public BaseResponse<Page<Chart>> listMyChartByPage(@RequestBody ChartQueryRequest chartQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<Chart>> listMyChartByPage(@RequestBody ChartQueryRequest chartQueryRequest) {
         if (chartQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
-        chartQueryRequest.setUserId(loginUser.getId());
+
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        chartQueryRequest.setUserId(currentUser.getId());
         long current = chartQueryRequest.getCurrent();
         long size = chartQueryRequest.getPageSize();
         // 限制爬虫
@@ -204,23 +202,22 @@ public class ChartController {
      * 编辑（用户）
      *
      * @param chartEditRequest
-     * @param request
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editChart(@RequestBody ChartEditRequest chartEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editChart(@RequestBody ChartEditRequest chartEditRequest) {
         if (chartEditRequest == null || chartEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Chart chart = new Chart();
         BeanUtils.copyProperties(chartEditRequest, chart);
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long id = chartEditRequest.getId();
         // 判断是否存在
         Chart oldChart = chartService.getById(id);
         ThrowUtils.throwIf(oldChart == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldChart.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!oldChart.getUserId().equals(currentUser.getId()) && !ShiroUtil.isAdmin()) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = chartService.updateById(chart);
@@ -260,11 +257,10 @@ public class ChartController {
      * 智能分析(MQ)
      * @param multipartFile
      * @param genChartByAiRequest
-     * @param request
      * @return
      */
     @PostMapping("/genChartByAiAsyncMq")
-    public BaseResponse<BiResponse> genChartByAiAsyncMq(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<BiResponse> genChartByAiAsyncMq(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
@@ -285,11 +281,11 @@ public class ChartController {
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix),ErrorCode.PARAMS_ERROR,"文件后缀格式非法");
 
         // 获取当前登陆用户
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long biModelId = BiConstant.BI_MODEL_ID;
 
         // 引入限流判断
-        redisLimiterManager.doRateLimit("genChartByAi_"+loginUser.getId());
+        redisLimiterManager.doRateLimit("genChartByAi_"+currentUser.getId());
 
         // 构造用户输入
         StringBuilder userInput = new StringBuilder();
@@ -318,7 +314,7 @@ public class ChartController {
 //        chart.setGenChart(genChart);
 //        chart.setGenResult(genResult);
         chart.setStatus("wait");
-        chart.setUserId(loginUser.getId());
+        chart.setUserId(currentUser.getId());
         boolean saveResult = chartService.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
 
@@ -338,11 +334,10 @@ public class ChartController {
      *
      * @param multipartFile
      * @param genChartByAiRequest
-     * @param request
      * @return
      */
     @PostMapping("/genChartByAiAsync")
-    public BaseResponse<BiResponse> genChartByAiAsync(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<BiResponse> genChartByAiAsync(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
@@ -363,11 +358,11 @@ public class ChartController {
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix),ErrorCode.PARAMS_ERROR,"文件后缀格式非法");
 
         // 获取当前登陆用户
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long biModelId = BiConstant.BI_MODEL_ID;
 
         // 引入限流判断
-        redisLimiterManager.doRateLimit("genChartByAi_"+loginUser.getId());
+        redisLimiterManager.doRateLimit("genChartByAi_"+currentUser.getId());
 
         // 构造用户输入
         StringBuilder userInput = new StringBuilder();
@@ -396,7 +391,7 @@ public class ChartController {
 //        chart.setGenChart(genChart);
 //        chart.setGenResult(genResult);
         chart.setStatus("wait");
-        chart.setUserId(loginUser.getId());
+        chart.setUserId(currentUser.getId());
         boolean saveResult = chartService.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
 
@@ -459,11 +454,10 @@ public class ChartController {
      * 智能分析接口（同步：校验=》限流=》构造用户输入、调用AI）
      * @param multipartFile
      * @param genChartByAiRequest
-     * @param request
      * @return
      */
     @PostMapping("/genChartByAiSync")
-    public BaseResponse<BiResponse> genChartByAiSync(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<BiResponse> genChartByAiSync(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
@@ -487,11 +481,11 @@ public class ChartController {
         ThrowUtils.throwIf(!validFileSuffixList.contains(suffix),ErrorCode.PARAMS_ERROR,"文件后缀格式非法");
 
         // 获取当前登陆用户
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         long biModelId = BiConstant.BI_MODEL_ID;
 
         // 引入限流判断
-        redisLimiterManager.doRateLimit("genChartByAi_"+loginUser.getId());
+        redisLimiterManager.doRateLimit("genChartByAi_"+currentUser.getId());
 
         // 构造用户输入
         StringBuilder userInput = new StringBuilder();
@@ -524,7 +518,7 @@ public class ChartController {
         chart.setChartType(chartType);
         chart.setGenChart(genChart);
         chart.setGenResult(genResult);
-        chart.setUserId(loginUser.getId());
+        chart.setUserId(currentUser.getId());
         boolean saveResult = chartService.save(chart);
         ThrowUtils.throwIf(!saveResult, ErrorCode.SYSTEM_ERROR, "图表保存失败");
         BiResponse biResponse = new BiResponse();
@@ -535,7 +529,7 @@ public class ChartController {
     }
 
     /*
-    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
@@ -557,7 +551,7 @@ public class ChartController {
      */
 
     /*
-    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();
@@ -572,7 +566,7 @@ public class ChartController {
     }
      */
     /*
-    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
+    public BaseResponse<String> genChartByAi(@RequestPart("file") MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest) {
         String name = genChartByAiRequest.getName();
         String goal = genChartByAiRequest.getGoal();
         String chartType = genChartByAiRequest.getChartType();

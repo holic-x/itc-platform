@@ -28,7 +28,7 @@ class PostThumbServiceTest {
 
     @Test
     void doPostThumb() {
-        int i = postThumbService.doPostThumb(1L, loginUser);
+        int i = postThumbService.doPostThumb(1L);
         Assertions.assertTrue(i >= 0);
     }
 }

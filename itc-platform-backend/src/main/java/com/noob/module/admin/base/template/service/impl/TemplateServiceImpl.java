@@ -91,7 +91,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     @Override
-    public TemplateVO getTemplateVO(Template template, HttpServletRequest request) {
+    public TemplateVO getTemplateVO(Template template) {
 
         TemplateVO templateVO = TemplateVO.objToVo(template);
         // 1. 关联查询创建者、修改者信息
@@ -113,7 +113,7 @@ public class TemplateServiceImpl extends ServiceImpl<TemplateMapper, Template>
     }
 
     @Override
-    public Page<TemplateVO> getTemplateVOPage(Page<Template> templatePage, HttpServletRequest request) {
+    public Page<TemplateVO> getTemplateVOPage(Page<Template> templatePage) {
         List<Template> templateList = templatePage.getRecords();
         Page<TemplateVO> templateVOPage = new Page<>(templatePage.getCurrent(), templatePage.getSize(), templatePage.getTotal());
         if (CollUtil.isEmpty(templateList)) {

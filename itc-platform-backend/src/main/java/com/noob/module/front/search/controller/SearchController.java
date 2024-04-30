@@ -51,12 +51,11 @@ public class SearchController {
     /**
      * V1.根据searchText查询所有的内容
      * @param searchRequest
-     * @param request
      * @return
      */
     @ApiOperation(value = "V1.根据searchText检索所有内容")
     @PostMapping("/searchAllByText")
-    public BaseResponse<SearchVO> searchAllByText(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+    public BaseResponse<SearchVO> searchAllByText(@RequestBody SearchRequest searchRequest) {
         String searchText = searchRequest.getSearchText();
         // 查询图片
         Page<Picture> picturePage = pictureService.searchPicture(searchText, 1, 10);
@@ -69,7 +68,7 @@ public class SearchController {
         // 查询文章
         PostQueryRequest postQueryRequest = new PostQueryRequest();
         postQueryRequest.setSearchText(searchText);
-        Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
+        Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest);
 
         // 封装响应数据
         SearchVO searchVO = new SearchVO();
@@ -82,12 +81,11 @@ public class SearchController {
     /**
      * V2.根据searchText并发处理查询方法
      * @param searchRequest
-     * @param request
      * @return
      */
     @ApiOperation(value = "V2.根据searchText检索所有内容(并发处理)")
     @PostMapping("/searchAllByTextCon")
-    public BaseResponse<SearchVO> searchAllByTextCon(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+    public BaseResponse<SearchVO> searchAllByTextCon(@RequestBody SearchRequest searchRequest) {
         String searchText = searchRequest.getSearchText();
         // 查询图片
         CompletableFuture<Page<Picture>> pictureTask = CompletableFuture.supplyAsync(() -> {
@@ -107,7 +105,7 @@ public class SearchController {
         CompletableFuture<Page<PostVO>> postTask = CompletableFuture.supplyAsync(() -> {
             PostQueryRequest postQueryRequest = new PostQueryRequest();
             postQueryRequest.setSearchText(searchText);
-            Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
+            Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest);
             return postVOPage;
         });
 
@@ -133,12 +131,11 @@ public class SearchController {
     /**
      * V3.根据searchText、type处理查询，接收指定单类的数据查询；符合门面模式，提供统一接口访问
      * @param searchRequest
-     * @param request
      * @return
      */
     @ApiOperation(value = "V3.根据searchText、type组合条件处理查询")
     @PostMapping("/searchAllByCond")
-    public BaseResponse<SearchVO> searchAllByCond(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+    public BaseResponse<SearchVO> searchAllByCond(@RequestBody SearchRequest searchRequest) {
         String searchText = searchRequest.getSearchText();
         String type = searchRequest.getSearchType();
         // 检验传入指定类型为空字符串则抛出异常
@@ -165,7 +162,7 @@ public class SearchController {
             CompletableFuture<Page<PostVO>> postTask = CompletableFuture.supplyAsync(() -> {
                 PostQueryRequest postQueryRequest = new PostQueryRequest();
                 postQueryRequest.setSearchText(searchText);
-                Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
+                Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest);
                 return postVOPage;
             });
 
@@ -207,7 +204,7 @@ public class SearchController {
                     // 查询文章
                     PostQueryRequest postQueryRequest = new PostQueryRequest();
                     postQueryRequest.setSearchText(searchText);
-                    Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
+                    Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest);
                     searchVO.setPostList(postVOPage.getRecords());
                     break;
                 default:

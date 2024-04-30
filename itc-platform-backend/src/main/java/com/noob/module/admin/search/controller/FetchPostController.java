@@ -53,7 +53,7 @@ public class FetchPostController {
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteFetchPost(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteFetchPost(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -73,14 +73,13 @@ public class FetchPostController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<FetchPostVO>> listFetchPostVoByPageForAdmin(@RequestBody FetchPostQueryRequest fetchPostQueryRequest,
                                                                        HttpServletRequest request) {
         long current = fetchPostQueryRequest.getCurrent();
         long size = fetchPostQueryRequest.getPageSize();
         Page<FetchPost> fetchPostPage = fetchPostService.page(new Page<>(current, size),
                 fetchPostService.getQueryWrapper(fetchPostQueryRequest));
-        return ResultUtils.success(fetchPostService.getFetchPostVOPage(fetchPostPage,request));
+        return ResultUtils.success(fetchPostService.getFetchPostVOPage(fetchPostPage));
     }
 
     // endregion
@@ -161,8 +160,7 @@ public class FetchPostController {
      * @return
      */
     @PostMapping("/batchDeleteFetchPost")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> batchDeleteFetchPost(@RequestBody BatchDeleteRequest batchDeleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> batchDeleteFetchPost(@RequestBody BatchDeleteRequest batchDeleteRequest) {
         if (batchDeleteRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

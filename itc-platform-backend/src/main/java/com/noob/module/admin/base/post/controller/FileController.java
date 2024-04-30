@@ -6,9 +6,11 @@ import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
 import com.noob.framework.constant.FileConstant;
 import com.noob.framework.manager.CosManager;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.base.post.model.dto.file.UploadFileRequest;
 import com.noob.module.admin.base.post.model.enums.FileUploadBizEnum;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import com.noob.framework.exception.BusinessException;
 
@@ -45,23 +47,22 @@ public class FileController {
      *
      * @param multipartFile
      * @param uploadFileRequest
-     * @param request
      * @return
      */
     @PostMapping("/upload")
     public BaseResponse<String> uploadFile(@RequestPart("file") MultipartFile multipartFile,
-                                           UploadFileRequest uploadFileRequest, HttpServletRequest request) {
+                                           UploadFileRequest uploadFileRequest) {
         String biz = uploadFileRequest.getBiz();
         FileUploadBizEnum fileUploadBizEnum = FileUploadBizEnum.getEnumByValue(biz);
         if (fileUploadBizEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         validFile(multipartFile, fileUploadBizEnum);
-        User loginUser = userService.getLoginUser(request);
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         // 文件目录：根据业务、用户来划分
         String uuid = RandomStringUtils.randomAlphanumeric(8);
         String filename = uuid + "-" + multipartFile.getOriginalFilename();
-        String filepath = String.format("/%s/%s/%s", fileUploadBizEnum.getValue(), loginUser.getId(), filename);
+        String filepath = String.format("/%s/%s/%s", fileUploadBizEnum.getValue(), currentUser.getId(), filename);
         File file = null;
         try {
             // 上传文件

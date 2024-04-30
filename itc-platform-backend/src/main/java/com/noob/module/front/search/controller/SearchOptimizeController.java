@@ -56,26 +56,24 @@ public class SearchOptimizeController {
      * controller不关心任何业务处理逻辑，而是通过一个入口指定入参和出参，所有处理交由SearchFacade
      *
      * @param searchRequest
-     * @param request
      * @return
      */
     @ApiOperation(value = "检索所有(基于门面模式改造优化)")
     @PostMapping("/all")
-    public BaseResponse<SearchVO> searchAllByCondFacade(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+    public BaseResponse<SearchVO> searchAllByCondFacade(@RequestBody SearchRequest searchRequest) {
         // 调用门面将查询到的数据信息进行封装并返回
-        return ResultUtils.success(searchFacade.searchAll(searchRequest, request));
+        return ResultUtils.success(searchFacade.searchAll(searchRequest));
     }
 
     /**
      * V4.2 基于设计模式改造：适配器模式改造介入不同数据源、注册器模式替代传统if...else...
      *
      * @param searchRequest
-     * @param request
      * @return
      */
     @ApiOperation(value = "检索所有(基于多种设计模式改造优化)")
     @PostMapping("/allByCondAdaptor")
-    public BaseResponse<SearchVO> searchAllByCondAdaptor(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+    public BaseResponse<SearchVO> searchAllByCondAdaptor(@RequestBody SearchRequest searchRequest) {
         String searchText = searchRequest.getSearchText();
         String type = searchRequest.getSearchType();
         // 检验传入指定类型为空字符串则抛出异常

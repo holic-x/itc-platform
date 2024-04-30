@@ -37,13 +37,12 @@ public class FetchPostController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<FetchPostVO>> listFetchPostVOByPageForUser(@RequestBody FetchPostQueryRequest fetchPostQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<FetchPostVO>> listFetchPostVOByPageForUser(@RequestBody FetchPostQueryRequest fetchPostQueryRequest) {
         long current = fetchPostQueryRequest.getCurrent();
         long size = fetchPostQueryRequest.getPageSize();
         Page<FetchPost> fetchPostPage = fetchPostService.page(new Page<>(current, size),
                 fetchPostService.getQueryWrapper(fetchPostQueryRequest));
-        return ResultUtils.success(fetchPostService.getFetchPostVOPage(fetchPostPage,request));
+        return ResultUtils.success(fetchPostService.getFetchPostVOPage(fetchPostPage));
     }
 
     // endregion

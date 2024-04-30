@@ -37,7 +37,6 @@ public class ApiSquareController {
      * @return
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<List<InterfaceInfoStatisticVO>> listInterfaceInfoStatisticsByPage(@RequestBody InterfaceInfoStatisticQueryRequest interfaceInfoStatisticQueryRequest) {
         if (interfaceInfoStatisticQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

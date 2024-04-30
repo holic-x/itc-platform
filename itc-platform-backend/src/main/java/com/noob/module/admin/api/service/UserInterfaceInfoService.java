@@ -24,7 +24,7 @@ public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
      * 添加用户调用接口信息
      * @param userInterfaceInfoAddRequest
      */
-    long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest, HttpServletRequest request);
+    long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest);
 
 
     /**

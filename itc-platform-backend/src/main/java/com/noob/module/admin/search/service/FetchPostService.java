@@ -28,10 +28,9 @@ public interface FetchPostService extends IService<FetchPost> {
      * 分页获取帖子封装
      *
      * @param fetchPostPage
-     * @param request
      * @return
      */
-    Page<FetchPostVO> getFetchPostVOPage(Page<FetchPost> fetchPostPage, HttpServletRequest request);
+    Page<FetchPostVO> getFetchPostVOPage(Page<FetchPost> fetchPostPage);
 
     /**
      * 模拟文章抓取

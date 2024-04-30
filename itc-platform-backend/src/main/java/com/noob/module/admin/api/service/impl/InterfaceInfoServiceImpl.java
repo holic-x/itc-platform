@@ -5,6 +5,7 @@ import com.noob.framework.common.ErrorCode;
 import com.noob.framework.common.ResultUtils;
 import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.admin.api.mapper.InterfaceInfoMapper;
 import com.noob.module.admin.api.model.dto.InterfaceInfoAddRequest;
 import com.noob.module.admin.api.model.entity.InterfaceInfo;
@@ -13,6 +14,7 @@ import com.noob.module.admin.api.model.enums.InterfaceInfoEnum;
 import com.noob.module.admin.api.service.InterfaceInfoService;
 import com.noob.module.admin.api.service.UserInterfaceInfoService;
 import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -65,7 +67,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     }
 
     @Override
-    public long addInterfaceInfo(InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request) {
+    public long addInterfaceInfo(InterfaceInfoAddRequest interfaceInfoAddRequest) {
         if (interfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -73,8 +75,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         BeanUtils.copyProperties(interfaceInfoAddRequest, interfaceInfo);
         // 校验
         validInterfaceInfo(interfaceInfo, true);
-        User loginUser = userService.getLoginUser(request);
-        interfaceInfo.setUserId(loginUser.getId());
+        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
+        interfaceInfo.setUserId(currentUser.getId());
         // 插入接口信息
         boolean result = save(interfaceInfo);
         ThrowUtils.throwIf(!result,ErrorCode.OPERATION_ERROR, "新增接口失败");
@@ -84,7 +86,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         // 绑定接口调用记录：用户新增接口默认为其分配接口调用次数
         UserInterfaceInfo userInterfaceInfo = new UserInterfaceInfo();
         userInterfaceInfo.setInterfaceInfoId(newInterfaceInfoId);
-        userInterfaceInfo.setUserId(loginUser.getId());
+        userInterfaceInfo.setUserId(currentUser.getId());
         userInterfaceInfo.setTotalNum(0);
         userInterfaceInfo.setLeftNum(100);
         userInterfaceInfo.setIsDelete(0);

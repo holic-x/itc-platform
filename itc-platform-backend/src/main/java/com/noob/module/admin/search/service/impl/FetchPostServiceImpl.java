@@ -75,7 +75,7 @@ public class FetchPostServiceImpl extends ServiceImpl<FetchPostMapper, FetchPost
     }
 
     @Override
-    public Page<FetchPostVO> getFetchPostVOPage(Page<FetchPost> fetchPostPage, HttpServletRequest request) {
+    public Page<FetchPostVO> getFetchPostVOPage(Page<FetchPost> fetchPostPage) {
         // 循环处理，将obj转化为对应的vo对象
         List<FetchPost> fetchPostList = fetchPostPage.getRecords();
         Page<FetchPostVO> fetchPostVOPage = new Page<>(fetchPostPage.getCurrent(), fetchPostPage.getSize(), fetchPostPage.getTotal());

@@ -19,7 +19,7 @@ public interface AccountService {
      * @param request
      * @return 脱敏后的用户信息
      */
-    LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    LoginUserVO userLogin(String userAccount, String userPassword,HttpServletRequest request);
 
 
 

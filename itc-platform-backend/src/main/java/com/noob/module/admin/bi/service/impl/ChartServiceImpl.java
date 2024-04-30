@@ -34,12 +34,12 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
     }
 
     @Override
-    public ChartVO getChartVO(Chart chart, HttpServletRequest request) {
+    public ChartVO getChartVO(Chart chart) {
         return null;
     }
 
     @Override
-    public Page<ChartVO> getChartVOPage(Page<Chart> chartPage, HttpServletRequest request) {
+    public Page<ChartVO> getChartVOPage(Page<Chart> chartPage) {
         return null;
     }
 

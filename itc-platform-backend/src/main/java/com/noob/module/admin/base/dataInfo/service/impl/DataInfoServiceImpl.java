@@ -99,7 +99,7 @@ public class DataInfoServiceImpl extends ServiceImpl<DataInfoMapper, DataInfo>
     }
 
     @Override
-    public DataInfoVO getDataInfoVO(DataInfo dataInfo, HttpServletRequest request) {
+    public DataInfoVO getDataInfoVO(DataInfo dataInfo) {
 
         DataInfoVO dataInfoVO = DataInfoVO.objToVo(dataInfo);
         // 1. 关联查询创建者、修改者信息
@@ -121,7 +121,7 @@ public class DataInfoServiceImpl extends ServiceImpl<DataInfoMapper, DataInfo>
     }
 
     @Override
-    public Page<DataInfoVO> getDataInfoVOPage(Page<DataInfo> dataInfoPage, HttpServletRequest request) {
+    public Page<DataInfoVO> getDataInfoVOPage(Page<DataInfo> dataInfoPage) {
         List<DataInfo> dataInfoList = dataInfoPage.getRecords();
         Page<DataInfoVO> dataInfoVOPage = new Page<>(dataInfoPage.getCurrent(), dataInfoPage.getSize(), dataInfoPage.getTotal());
         if (CollUtil.isEmpty(dataInfoList)) {

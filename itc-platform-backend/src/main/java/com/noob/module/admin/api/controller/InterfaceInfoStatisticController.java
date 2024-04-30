@@ -38,7 +38,6 @@ public class InterfaceInfoStatisticController {
     private InterfaceInfoService interfaceInfoService;
 
     @GetMapping("/top/interface/invoke")
-    @AuthCheck(mustRole = "admin")
     public BaseResponse<List<InterfaceInfoVO>> listTopInvokeInterfaceInfo() {
         List<UserInterfaceInfo> userInterfaceInfoList = userInterfaceInfoMapper.listTopInvokeInterfaceInfo(3);
         Map<Long, List<UserInterfaceInfo>> interfaceInfoIdObjMap = userInterfaceInfoList.stream()
