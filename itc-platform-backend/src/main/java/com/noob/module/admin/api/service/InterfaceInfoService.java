@@ -1,7 +1,10 @@
 package com.noob.module.admin.api.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.noob.module.admin.api.model.dto.InterfaceInfoAddRequest;
 import com.noob.module.admin.api.model.entity.InterfaceInfo;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author hahabibu
@@ -17,12 +20,27 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
      */
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
+
+    /**
+     * 添加接口信息
+     * @param interfaceInfoAddRequest
+     */
+    long addInterfaceInfo(InterfaceInfoAddRequest interfaceInfoAddRequest, HttpServletRequest request);
+
     /**
      * 根据指定操作校验并修改接口状态
      * @param interfaceInfoId
      * @param status
      * @return
      */
-    public boolean handleInterfaceInfoStatus(long interfaceInfoId, int status);
+     boolean handleInterfaceInfoStatus(long interfaceInfoId, int status);
+
+
+    /**
+     * 调用接口信息，返回响应结果
+     */
+    String invokeInterfaceInfo();
+
+
 
 }

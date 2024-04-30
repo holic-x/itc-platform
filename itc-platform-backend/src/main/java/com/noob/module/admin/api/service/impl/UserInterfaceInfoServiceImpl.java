@@ -3,11 +3,20 @@ package com.noob.module.admin.api.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.common.ErrorCode;
+import com.noob.framework.common.ResultUtils;
 import com.noob.framework.exception.BusinessException;
+import com.noob.framework.exception.ThrowUtils;
 import com.noob.module.admin.api.mapper.UserInterfaceInfoMapper;
+import com.noob.module.admin.api.model.dto.UserInterfaceInfoAddRequest;
 import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 import com.noob.module.admin.api.service.UserInterfaceInfoService;
+import com.noob.module.admin.base.user.model.entity.User;
+import com.noob.module.admin.base.user.service.UserService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author hahabibu
@@ -16,6 +25,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoMapper, UserInterfaceInfo>
     implements UserInterfaceInfoService {
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add) {
@@ -31,6 +43,25 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         if (userInterfaceInfo.getLeftNum() < 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "剩余次数不能小于 0");
         }
+    }
+
+    @Override
+    public long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest, HttpServletRequest request) {
+        if (userInterfaceInfoAddRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        UserInterfaceInfo userInterfaceInfo = new UserInterfaceInfo();
+        BeanUtils.copyProperties(userInterfaceInfoAddRequest, userInterfaceInfo);
+        // 校验
+        validUserInterfaceInfo(userInterfaceInfo, true);
+        User loginUser = userService.getLoginUser(request);
+        userInterfaceInfo.setUserId(loginUser.getId());
+
+        boolean result = this.save(userInterfaceInfo);
+        ThrowUtils.throwIf(!result,ErrorCode.OPERATION_ERROR,"用户接口调用信息添加失败");
+
+        long newUserInterfaceInfoId = userInterfaceInfo.getId();
+        return newUserInterfaceInfoId;
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.noob.module.admin.api.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.noob.module.admin.api.model.dto.InterfaceInfoAddRequest;
+import com.noob.module.admin.api.model.dto.UserInterfaceInfoAddRequest;
 import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author hahabibu
@@ -10,11 +14,18 @@ import com.noob.module.admin.api.model.entity.UserInterfaceInfo;
 public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
 
     /**
-     * 校验用户统计信息
+     * 校验用户调用接口统计信息
      * @param userInterfaceInfo
      * @param add
      */
     void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add);
+
+    /**
+     * 添加用户调用接口信息
+     * @param userInterfaceInfoAddRequest
+     */
+    long addUserInterfaceInfo(UserInterfaceInfoAddRequest userInterfaceInfoAddRequest, HttpServletRequest request);
+
 
     /**
      * 调用接口统计
