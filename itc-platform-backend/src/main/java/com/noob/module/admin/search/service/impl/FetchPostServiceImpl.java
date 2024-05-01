@@ -15,7 +15,7 @@ import com.noob.module.admin.search.model.entity.FetchPost;
 import com.noob.module.admin.search.model.vo.FetchPostVO;
 import com.noob.module.admin.search.service.FetchPostService;
 import com.noob.module.front.search.mapper.FetchPostMapper;
-import com.noob.module.front.search.es.dto.FetchPostEsDTO;
+import com.noob.module.admin.search.es.dto.FetchPostEsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

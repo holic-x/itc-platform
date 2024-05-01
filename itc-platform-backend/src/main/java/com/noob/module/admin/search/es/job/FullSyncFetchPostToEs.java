@@ -1,10 +1,10 @@
-package com.noob.module.front.search.es.job;
+package com.noob.module.admin.search.es.job;
 
 import cn.hutool.core.collection.CollUtil;
+import com.noob.module.admin.search.es.dao.FetchPostEsDao;
+import com.noob.module.admin.search.es.dto.FetchPostEsDTO;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import com.noob.module.admin.search.service.FetchPostService;
-import com.noob.module.front.search.es.dao.FetchPostEsDao;
-import com.noob.module.front.search.es.dto.FetchPostEsDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 

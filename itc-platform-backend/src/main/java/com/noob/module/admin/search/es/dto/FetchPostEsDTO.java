@@ -1,4 +1,4 @@
-package com.noob.module.front.search.es.dto;
+package com.noob.module.admin.search.es.dto;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;

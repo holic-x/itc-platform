@@ -1,6 +1,6 @@
-package com.noob.module.front.search.es.dao;
+package com.noob.module.admin.search.es.dao;
 
-import com.noob.module.front.search.es.dto.FetchPostEsDTO;
+import com.noob.module.admin.search.es.dto.FetchPostEsDTO;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.List;
