@@ -62,11 +62,11 @@ public class DataInfoController {
         dataInfoService.validDataInfo(dataInfo, true);
 
         // 获取当前登陆用户
-        LoginUserVO currentUser = ShiroUtil.getCurrentUser();
-        dataInfo.setCreater(currentUser.getId());
-        dataInfo.setUpdater(currentUser.getId());
-        dataInfo.setCreateTime(new Date());
-        dataInfo.setUpdateTime(new Date());
+        Date currentTime = new Date();
+        dataInfo.setCreater(ShiroUtil.getCurrentUserId());
+        dataInfo.setUpdater(ShiroUtil.getCurrentUserId());
+        dataInfo.setCreateTime(currentTime);
+        dataInfo.setUpdateTime(currentTime);
 
         // 新增
         boolean result = dataInfoService.save(dataInfo);
