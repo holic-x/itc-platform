@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.constant.CommonConstant;
 import com.noob.framework.utils.SqlUtils;
+import com.noob.module.admin.search.es.dao.FetchPostEsDao;
 import com.noob.module.admin.search.model.dto.FetchPostQueryRequest;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import com.noob.module.admin.search.model.vo.FetchPostVO;
@@ -51,6 +52,11 @@ public class FetchPostServiceImpl extends ServiceImpl<FetchPostMapper, FetchPost
     @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
+
+    @Resource
+    private FetchPostEsDao fetchPostEsDao;
+
+
     /**
      * 获取查询包装类
      *
@@ -63,20 +69,29 @@ public class FetchPostServiceImpl extends ServiceImpl<FetchPostMapper, FetchPost
         if (fetchPostQueryRequest == null) {
             return queryWrapper;
         }
-        String searchText = fetchPostQueryRequest.getSearchText();
         String sortField = fetchPostQueryRequest.getSortField();
         String sortOrder = fetchPostQueryRequest.getSortOrder();
         Long id = fetchPostQueryRequest.getId();
+
+        String searchText = fetchPostQueryRequest.getSearchText();
+        String userName = fetchPostQueryRequest.getUserName();
+
         String title = fetchPostQueryRequest.getTitle();
         String content = fetchPostQueryRequest.getContent();
         List<String> tagList = fetchPostQueryRequest.getTags();
         Long userId = fetchPostQueryRequest.getUserId();
         Long notId = fetchPostQueryRequest.getNotId();
         Integer status = fetchPostQueryRequest.getStatus();
+
         // 拼接查询条件
         if (StringUtils.isNotBlank(searchText)) {
             queryWrapper.and(qw -> qw.like("title", searchText).or().like("content", searchText));
         }
+
+        if (StringUtils.isNotBlank(userName)) {
+            queryWrapper.and(qw -> qw.like("userName", userName));
+        }
+
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
         queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
         queryWrapper.like(status!=null, "status", status);
@@ -184,10 +199,15 @@ public class FetchPostServiceImpl extends ServiceImpl<FetchPostMapper, FetchPost
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(boolQueryBuilder)
                 .withPageable(pageRequest).withSorts(sortBuilder).build();
         SearchHits<FetchPostEsDTO> searchHits = elasticsearchRestTemplate.search(searchQuery, FetchPostEsDTO.class);
+
+        log.info("从ES中检索数据记录总条数为：{}",searchHits.getTotalHits());
+
+        // sign 动静分离：先从ES检索满足条件的记录，然后再从数据库中关联其最新的记录信息
         // 封装查询数据
         Page<FetchPost> page = new Page<>();
         page.setTotal(searchHits.getTotalHits());
         List<FetchPost> resourceList = new ArrayList<>();
+
         // 查出结果后，从 db 获取最新动态数据（比如点赞数）
         if (searchHits.hasSearchHits()) {
             List<SearchHit<FetchPostEsDTO>> searchHitList = searchHits.getSearchHits();
@@ -273,6 +293,28 @@ public class FetchPostServiceImpl extends ServiceImpl<FetchPostMapper, FetchPost
         return res;
     }
 
+    @Override
+    public boolean pushFullToES() {
+        // 获取文章全量数据
+        List<FetchPost> fetchPostList = this.list();
+        // 列表为空没有数据要推送
+        if (CollUtil.isEmpty(fetchPostList)) {
+            return true;
+        }
+        List<FetchPostEsDTO> fetchPostEsDTOList = fetchPostList.stream().map(FetchPostEsDTO::objToDto).collect(Collectors.toList());
+
+        // 批处理（每500条保存一次）
+        final int pageSize = 500;
+        int total = fetchPostEsDTOList.size();
+        log.info("FullSyncPostToEs start, total {}", total);
+        for (int i = 0; i < total; i += pageSize) {
+            int end = Math.min(i + pageSize, total);
+            log.info("sync from {} to {}", i, end);
+            fetchPostEsDao.saveAll(fetchPostEsDTOList.subList(i, end));
+        }
+        log.info("FullSyncPostToEs end, total {}", total);
+        return true;
+    }
 
 
 }

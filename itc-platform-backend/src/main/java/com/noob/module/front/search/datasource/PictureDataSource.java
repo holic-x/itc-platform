@@ -27,6 +27,13 @@ import java.util.Map;
 @Slf4j
 public class PictureDataSource implements DataSource<Picture> {
 
+    /**
+     * 解析bing突变数据
+     * @param searchText
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @Override
     public Page<Picture> doSearch(String searchText, int pageNum, int pageSize) {
         long current = (pageNum - 1) * pageSize;
@@ -58,6 +65,8 @@ public class PictureDataSource implements DataSource<Picture> {
         }
         Page<Picture> picturePage = new Page<>(pageNum, pageSize);
         picturePage.setRecords(pictures);
+        // 限制查询100（需要手动进行分页）
+//        picturePage.setTotal(100);
         return picturePage;
     }
 }

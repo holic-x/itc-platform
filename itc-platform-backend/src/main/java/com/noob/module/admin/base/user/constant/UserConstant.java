@@ -51,6 +51,12 @@ public interface UserConstant {
      */
     String DEFAULT_AVATAR = "https://img2.baidu.com/it/u=3442676033,4275801877&fm=253&fmt=auto&app=138&f=JPEG?w=522&h=386";
 
+    /**
+     * 用户默认头像信息
+     */
+    String DEFAULT_DESCR = "循此苦旅，以达天际";
+
+
 
     /**
      * 用户开发者模式(0-关闭、1-开启)

@@ -52,6 +52,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public static final String SALT = "noob";
 
     @Override
+    public void validUser(User user, boolean add) {
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        String userAccount = user.getUserAccount();
+        String userPassword = user.getUserPassword();
+
+        // 创建时,校验参数
+        if (add) {
+            if (StringUtils.isAnyBlank(userAccount,userPassword)) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户名或密码不为空");
+            }
+            // 如果用户账号不符合创建规则提示
+            if (userAccount.length() < 4) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号太短");
+            }
+            if (userPassword.length() < 8) {
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码太短");
+            }
+        }
+    }
+
+    @Override
     public long userRegister(String userName,String userAccount, String userPassword, String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userName,userAccount, userPassword, checkPassword)) {
@@ -86,6 +109,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUserStatus(UserConstant.USER_STATUS_ACTIVE);
             // 设置默认头像配置
             user.setUserAvatar(UserConstant.DEFAULT_AVATAR);
+            // 设置默认备注
+            user.setUserDescr(UserConstant.DEFAULT_DESCR);
 
             boolean saveResult = this.save(user);
             if (!saveResult) {

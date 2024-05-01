@@ -1,5 +1,6 @@
 package com.noob.module.front.search.model.vo;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.noob.module.admin.base.post.model.vo.PostVO;
 import com.noob.module.admin.base.user.model.vo.UserVO;
 import com.noob.module.front.search.model.entity.Picture;
@@ -24,6 +25,9 @@ public class SearchVO implements Serializable {
     private List<Picture> pictureList;
 
     private List<?> dataList;
+
+    private long total;
+
 
     private static final long serialVersionUID = 1L;
 

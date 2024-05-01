@@ -7,6 +7,7 @@ import com.noob.module.admin.search.model.entity.FetchPost;
 import com.noob.module.admin.search.service.FetchPostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;

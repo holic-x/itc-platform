@@ -89,6 +89,7 @@ public class UserController {
      * @param request
      * @return
      */
+    @Deprecated
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,HttpServletRequest request) {
         if (userLoginRequest == null) {
@@ -106,6 +107,7 @@ public class UserController {
     /**
      * 用户登录（微信开放平台）
      */
+    @Deprecated
     @GetMapping("/login/wx_open")
     public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request, HttpServletResponse response,
             @RequestParam("code") String code) {
@@ -132,6 +134,7 @@ public class UserController {
      * @param request
      * @return
      */
+    @Deprecated
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         if (request == null) {
@@ -147,6 +150,7 @@ public class UserController {
      * @param request
      * @return
      */
+    @Deprecated
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         // 方式1：获取登录用户（基本信息）
@@ -171,9 +175,12 @@ public class UserController {
         }
 
         Date currentTime = new Date();
-
         User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
+
+        // 校验用户信息
+        userService.validUser(user,true);
+
         // 设置默认密码
         String defaultPassword = UserConstant.DEFAULT_PASSWORD;
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
@@ -181,6 +188,15 @@ public class UserController {
 
         // 设置用户默认状态为启用
         user.setUserStatus(UserConstant.USER_STATUS_ACTIVE);
+
+        // 如果没有指定头像则设置默认头像
+        if(StringUtils.isBlank(userAddRequest.getUserAvatar())){
+            user.setUserAvatar(UserConstant.DEFAULT_AVATAR);
+        }
+        // 设置默认备注
+        if(StringUtils.isBlank(userAddRequest.getUserDescr())){
+            user.setUserDescr(UserConstant.DEFAULT_DESCR);
+        }
 
         // 保存用户信息
         boolean result = userService.save(user);
@@ -238,6 +254,10 @@ public class UserController {
 
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
+
+        // 校验用户信息
+        userService.validUser(user,false);
+
         user.setUpdateTime(new Date());
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);

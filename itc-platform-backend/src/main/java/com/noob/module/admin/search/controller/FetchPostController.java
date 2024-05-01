@@ -45,6 +45,18 @@ public class FetchPostController {
     }
 
     /**
+     * 文章推送到ES（全量）
+     *
+     * @return
+     */
+    @PostMapping("/pushFullToES")
+    public BaseResponse<Boolean> pushFullToES(HttpServletRequest request) {
+        // 调用方法推送文章数据（全量）
+        boolean res = fetchPostService.pushFullToES();
+        return ResultUtils.success(res);
+    }
+
+    /**
      * 删除
      *
      * @param deleteRequest
@@ -81,24 +93,6 @@ public class FetchPostController {
     }
 
     // endregion
-
-    /**
-     * 分页搜索（从 ES 查询，封装类）
-     *
-     * @param fetchPostQueryRequest
-     * @return
-     */
-    /*
-    @PostMapping("/search/page/vo")
-    public BaseResponse<Page<FetchPostVO>> searchFetchPostVOByPage(@RequestBody FetchPostQueryRequest fetchPostQueryRequest,
-            HttpServletRequest request) {
-        long size = fetchPostQueryRequest.getPageSize();
-        // 限制爬虫
-        ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<FetchPost> fetchPostPage = fetchPostService.searchFromEs(fetchPostQueryRequest);
-        return ResultUtils.success(fetchPostService.getFetchPostVOPage(fetchPostPage, request));
-    }
-    */
 
     // --------------- 批量操作定义 ---------------
 

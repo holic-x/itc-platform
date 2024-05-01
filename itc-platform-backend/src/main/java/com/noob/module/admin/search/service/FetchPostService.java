@@ -48,4 +48,11 @@ public interface FetchPostService extends IService<FetchPost> {
      */
     boolean modFetchPost();
 
+
+    /**
+     * 推送文章到ES（全量操作）
+     * @return
+     */
+    boolean pushFullToES();
+
 }

@@ -3,6 +3,7 @@ package com.noob.module.admin.base.user.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.noob.module.admin.api.model.entity.InterfaceInfo;
 import com.noob.module.admin.base.user.model.dto.UserQueryRequest;
 import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
@@ -17,6 +18,14 @@ import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
  *
  */
 public interface UserService extends IService<User> {
+
+    /**
+     * 校验
+     *
+     * @param user
+     * @param add
+     */
+    void validUser(User user, boolean add);
 
     /**
      * 用户注册

@@ -20,6 +20,12 @@ public class UserUpdateRequest implements Serializable {
     private String userName;
 
     /**
+     * 账号
+     */
+    private String userAccount;
+
+
+    /**
      * 用户头像
      */
     private String userAvatar;
@@ -33,6 +39,11 @@ public class UserUpdateRequest implements Serializable {
      * 用户角色：user/admin/ban
      */
     private String userRole;
+
+    /**
+     * 用户备注
+     */
+    private String userDescr;
 
     private static final long serialVersionUID = 1L;
 }

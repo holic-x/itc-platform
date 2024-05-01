@@ -31,6 +31,11 @@ public class FetchPostQueryRequest extends PageRequest implements Serializable {
     private String searchText;
 
     /**
+     * 创建者
+     */
+    private String userName;
+
+    /**
      * 标题
      */
     private String title;

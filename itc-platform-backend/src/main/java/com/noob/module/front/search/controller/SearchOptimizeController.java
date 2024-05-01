@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,8 +97,10 @@ public class SearchOptimizeController {
             Page page = dataSource.doSearch(searchText, searchRequest.getCurrent(), searchRequest.getPageSize());
             // 将查询到的数据信息进行封装并返回
             searchVO.setDataList(page.getRecords());
+            // 封装分页参数
+            searchVO.setTotal(page.getTotal());
+
             return ResultUtils.success(searchVO);
         }
-//        return null;
     }
 }
