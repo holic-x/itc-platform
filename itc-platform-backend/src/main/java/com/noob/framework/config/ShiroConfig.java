@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @Description TODO
+ * @Description Shiro全局配置
  * @Author Huh-x
  * @Date 2024 2024/4/30 14:10
  */

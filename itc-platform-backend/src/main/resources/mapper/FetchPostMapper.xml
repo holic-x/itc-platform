@@ -29,4 +29,9 @@
         userId,userName,userInfo,createTime,
         updateTime,isDelete,status
     </sql>
+    <select id="listPostWithDelete" resultType="com.noob.module.admin.search.model.entity.FetchPost">
+        select *
+        from fetch_post
+        where updateTime >= #{minUpdateTime}
+    </select>
 </mapper>

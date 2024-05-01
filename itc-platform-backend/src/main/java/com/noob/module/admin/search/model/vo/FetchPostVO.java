@@ -39,6 +39,10 @@ public class FetchPostVO  implements Serializable {
      */
     private String category;
 
+    /**
+     * 标签列表（json 转化为 数组）
+     */
+    private String tags;
 
     /**
      * 标签列表（json 转化为 数组）

@@ -2,6 +2,8 @@ package com.noob.module.admin.search.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.noob.module.admin.base.post.model.dto.post.PostQueryRequest;
+import com.noob.module.admin.base.post.model.entity.Post;
 import com.noob.module.admin.search.model.dto.FetchPostQueryRequest;
 import com.noob.module.admin.search.model.entity.FetchPost;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -31,6 +33,14 @@ public interface FetchPostService extends IService<FetchPost> {
      * @return
      */
     Page<FetchPostVO> getFetchPostVOPage(Page<FetchPost> fetchPostPage);
+
+    /**
+     * 从 ES 查询
+     *
+     * @param fetchPostQueryRequest
+     * @return
+     */
+    Page<FetchPost> searchFromEs(FetchPostQueryRequest fetchPostQueryRequest);
 
     /**
      * 模拟文章抓取

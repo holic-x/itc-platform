@@ -18,4 +18,7 @@ public class InterfaceInfoStatisticQueryRequest {
     private String interfaceType;
 
     private String interfaceStatus;
+
+    // 聚合搜索查询参数
+    private String searchText;
 }

@@ -1,11 +1,15 @@
 package com.noob.module.admin.base.post.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.noob.framework.common.ErrorCode;
+import com.noob.framework.constant.CommonConstant;
+import com.noob.framework.exception.BusinessException;
 import com.noob.framework.exception.ThrowUtils;
 import com.noob.framework.realm.ShiroUtil;
+import com.noob.framework.utils.SqlUtils;
 import com.noob.module.admin.base.post.mapper.PostFavourMapper;
 import com.noob.module.admin.base.post.mapper.PostMapper;
 import com.noob.module.admin.base.post.mapper.PostThumbMapper;
@@ -15,25 +19,12 @@ import com.noob.module.admin.base.post.model.entity.Post;
 import com.noob.module.admin.base.post.model.entity.PostFavour;
 import com.noob.module.admin.base.post.model.entity.PostThumb;
 import com.noob.module.admin.base.post.model.vo.PostVO;
+import com.noob.module.admin.base.post.service.PostService;
 import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.model.vo.UserVO;
-import com.noob.framework.utils.SqlUtils;
-import com.noob.framework.constant.CommonConstant;
-import com.noob.framework.exception.BusinessException;
-import com.noob.module.admin.base.post.service.PostService;
 import com.noob.module.admin.base.user.service.UserService;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -48,6 +39,10 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 帖子服务实现

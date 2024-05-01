@@ -1,6 +1,7 @@
 package com.noob.module.admin.bi.config;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -25,7 +26,7 @@ public class RedissonConfig {
     private Integer port;
 
     // 如果redis没有默认密码则不用写
-//    private String password;
+    private String password;
 
     @Bean
     public RedissonClient getRedissonClient() {
@@ -34,8 +35,8 @@ public class RedissonConfig {
         // 添加单机Redisson配置
         config.useSingleServer()
                 .setDatabase(database)
+                .setPassword(StringUtils.isNotBlank(password)?password:null)
                 .setAddress("redis://"+host+":"+port);
-        // 如果没有密码则不需要设定
 
         // 2.创建Redisson实例
         RedissonClient redisson = Redisson.create(config);

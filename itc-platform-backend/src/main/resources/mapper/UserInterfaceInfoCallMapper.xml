@@ -56,6 +56,10 @@ from (
          group by interfaceInfoId
      )as tb
          left join interface_info ii on ii.id = tb.interfaceInfoId
+         where 1=1
+         <if test="params.searchText !=null and params.searchText !='' ">
+            and ii.name like concat('%',#{params.searchText},'%')
+         </if>
 
     </select>
 </mapper>

@@ -27,9 +27,6 @@ public class ApiSquareController {
     @Resource
     private UserInterfaceInfoCallMapper userInterfaceInfoCallMapper;
 
-
-
-
     /**
      * 分页获取接口统计信息
      *
