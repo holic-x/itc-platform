@@ -2,12 +2,12 @@ package com.noob.module.base.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.base.model.entity.Post;
-import com.noob.module.base.model.entity.User;
+import com.noob.module.admin.base.post.model.entity.Post;
+import com.noob.module.admin.base.user.model.entity.User;
 
 import javax.annotation.Resource;
 
-import com.noob.module.base.service.PostFavourService;
+import com.noob.module.admin.base.post.service.PostFavourService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class PostFavourServiceTest {
 
     @Test
     void doPostFavour() {
-        int i = postFavourService.doPostFavour(1L, loginUser);
+        int i = postFavourService.doPostFavour(1L);
         Assertions.assertTrue(i >= 0);
     }
 

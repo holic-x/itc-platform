@@ -1,11 +1,11 @@
 package com.noob.module.base.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.noob.module.base.model.dto.post.PostQueryRequest;
-import com.noob.module.base.model.entity.Post;
+import com.noob.module.admin.base.post.model.dto.post.PostQueryRequest;
+import com.noob.module.admin.base.post.model.entity.Post;
 import javax.annotation.Resource;
 
-import com.noob.module.base.service.PostService;
+import com.noob.module.admin.base.post.service.PostService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

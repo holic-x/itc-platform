@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noob.module.admin.api.mapper.UserInterfaceInfoCallMapper">
+
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.api.model.entity.UserInterfaceInfoCall">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="interfaceInfoId" column="interfaceInfoId" jdbcType="BIGINT"/>
+            <result property="interfaceInfoName" column="interfaceInfoName" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="errMessage" column="errMessage" jdbcType="VARCHAR"/>
+            <result property="callTime" column="callTime" jdbcType="TIMESTAMP"/>
+            <result property="duration" column="duration" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,interfaceInfoId,
+        interfaceInfoName,status,errMessage,
+        callTime,duration,isDelete
+    </sql>
+    <select id="listInterfaceInfoStatistic"
+            resultType="com.noob.module.front.api.model.vo.InterfaceInfoStatisticVO">
+
+--         SELECT
+--             uiic.userId,
+--             uiic.interfaceInfoId,
+--             sum(case when status = 0 then 1 else 0 end) as 'callFailNum',
+--                 sum(case when status = 1 then 1 else 0 end) as 'callSuccessNum',
+--                 sum(case when status is null then 1 else 0 end) as 'errStatusNum',
+--                 count(1) as 'callTotal'
+--         from user_interface_info_call uiic
+--         group by interfaceInfoId,userId
+
+--         SELECT
+--             uiic.interfaceInfoId,
+--             sum(case when status = 0 then 1 else 0 end) as 'callFailNum',
+--                 sum(case when status = 1 then 1 else 0 end) as 'callSuccessNum',
+--                 sum(case when status is null then 1 else 0 end) as 'errStatusNum',
+--                 count(1) as 'callTotal'
+--         from user_interface_info_call uiic
+--         group by interfaceInfoId
+
+
+select tb.*,ii.name 'interfaceInfoName',ii.avatar 'interfaceInfoAvatar'
+from (
+         SELECT
+             uiic.interfaceInfoId,
+             sum(case when status = 0 then 1 else 0 end) as 'callFailNum',
+                 sum(case when status = 1 then 1 else 0 end) as 'callSuccessNum',
+                 sum(case when status is null then 1 else 0 end) as 'errStatusNum',
+                 count(1) as 'callTotal'
+         from user_interface_info_call uiic
+         group by interfaceInfoId
+     )as tb
+         left join interface_info ii on ii.id = tb.interfaceInfoId
+         where 1=1
+         <if test="params.searchText !=null and params.searchText !='' ">
+            and ii.name like concat('%',#{params.searchText},'%')
+         </if>
+
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noob.module.admin.base.user.mapper.UserExtendMapper">
+
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.base.user.model.entity.UserExtend">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="accessKey" column="accessKey" jdbcType="VARCHAR"/>
+            <result property="secretKey" column="secretKey" jdbcType="VARCHAR"/>
+            <result property="isDevelop" column="isDevelop" jdbcType="TINYINT"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="grade" column="grade" jdbcType="VARCHAR"/>
+            <result property="registerChannel" column="registerChannel" jdbcType="VARCHAR"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,accessKey,
+        secretKey,isDevelop,score,
+        grade,registerChannel,createTime,updateTime,
+        isDelete
+    </sql>
+    <select id="getUserExtendByUserId" resultType="com.noob.module.admin.base.user.model.entity.UserExtend">
+        select
+        <include refid="Base_Column_List"></include>
+        from user_extend ue
+        where ue.userId = #{userId}
+    </select>
+</mapper>

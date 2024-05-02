@@ -1,9 +1,9 @@
 package com.noob.framework.job.once;
 
-import com.noob.module.base.esdao.PostEsDao;
-import com.noob.module.base.model.dto.post.PostEsDTO;
-import com.noob.module.base.model.entity.Post;
-import com.noob.module.base.service.PostService;
+import com.noob.module.admin.base.post.esdao.PostEsDao;
+import com.noob.module.admin.base.post.model.dto.post.PostEsDTO;
+import com.noob.module.admin.base.post.model.entity.Post;
+import com.noob.module.admin.base.post.service.PostService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 /**
  * 全量同步帖子到 es

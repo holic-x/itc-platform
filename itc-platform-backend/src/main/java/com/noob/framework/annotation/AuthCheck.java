@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
  * 权限校验（用于接口访问权限校验）
  *
  */
+@Deprecated
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthCheck {

@@ -2,10 +2,10 @@ package com.noob.framework.aop;
 
 import com.noob.framework.annotation.AuthCheck;
 import com.noob.framework.common.ErrorCode;
-import com.noob.module.base.model.enums.UserRoleEnum;
-import com.noob.module.base.service.UserService;
+import com.noob.module.admin.base.user.model.enums.UserRoleEnum;
+import com.noob.module.admin.base.user.service.UserService;
 import com.noob.framework.exception.BusinessException;
-import com.noob.module.base.model.entity.User;
+import com.noob.module.admin.base.user.model.entity.User;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * 权限校验 AOP
  *
  */
+@Deprecated
 @Aspect
 @Component
 public class AuthInterceptor {

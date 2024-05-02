@@ -98,7 +98,14 @@ knife4j:
       default:
         api-rule: package
         api-rule-resources:
-          - com.noob.module.base.controller
-          - com.noob.module.template.controller
-          - com.noob.module.dataInfo.controller
-          - com.noob.module.itc.controller
+          - com.noob.module.admin.base.dataInfo.controller
+          - com.noob.module.admin.base.post.controller
+          - com.noob.module.admin.base.template.controller
+          - com.noob.module.admin.base.user.controller
+          - com.noob.module.admin.api.controller
+          - com.noob.module.admin.bi.controller
+          - com.noob.module.admin.cms.controller
+          - com.noob.module.admin.search.controller
+          - com.noob.module.front.search.controller
+          - com.noob.module.front.api.controller
+          - com.noob.module.account.controller

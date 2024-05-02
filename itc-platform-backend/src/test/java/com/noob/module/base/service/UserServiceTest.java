@@ -2,7 +2,7 @@ package com.noob.module.base.service;
 
 import javax.annotation.Resource;
 
-import com.noob.module.base.service.UserService;
+import com.noob.module.admin.base.user.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

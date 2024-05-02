@@ -1,9 +1,9 @@
 package com.noob.module.base.service;
 
-import com.noob.module.base.model.entity.User;
+import com.noob.module.admin.base.user.model.entity.User;
 import javax.annotation.Resource;
 
-import com.noob.module.base.service.PostThumbService;
+import com.noob.module.admin.base.post.service.PostThumbService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class PostThumbServiceTest {
 
     @Test
     void doPostThumb() {
-        int i = postThumbService.doPostThumb(1L, loginUser);
+        int i = postThumbService.doPostThumb(1L);
         Assertions.assertTrue(i >= 0);
     }
 }

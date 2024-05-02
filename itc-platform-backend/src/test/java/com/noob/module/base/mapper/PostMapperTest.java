@@ -1,7 +1,7 @@
 package com.noob.module.base.mapper;
 
-import com.noob.module.base.mapper.PostMapper;
-import com.noob.module.base.model.entity.Post;
+import com.noob.module.admin.base.post.mapper.PostMapper;
+import com.noob.module.admin.base.post.model.entity.Post;
 
 import java.util.Date;
 import java.util.List;
