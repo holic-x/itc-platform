@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.noob.module.admin.base.user.mapper.UserSignMapper">
+
+    <resultMap id="BaseResultMap" type="com.noob.module.admin.base.user.model.entity.UserSign">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="uid" column="uid" jdbcType="BIGINT"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="signInTime" column="signInTime" jdbcType="TIMESTAMP"/>
+            <result property="signInChannel" column="signChannel" jdbcType="VARCHAR"/>
+            <result property="score" column="score" jdbcType="INTEGER"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,uid,title,
+        signInTime,signChannel,score,
+        isDelete
+    </sql>
+
+
+    <sql id="selectVO">
+        SELECT
+            us.id,
+            us.uid,
+            u.userName "uname" ,
+            us.title,
+            us.signInTime,
+            us.signInChannel,
+            us.score,
+            us.isDelete
+        FROM
+            user_sign us
+                LEFT JOIN `user` u ON u.id = us.uid
+    </sql>
+
+    <!-- 分页获取数据 -->
+    <select id="getVOById" resultType="com.noob.module.admin.base.user.model.vo.UserSignVO" parameterType="long">
+        <include refid="selectVO"></include>
+        where us.id = #{id}
+    </select>
+
+    <!-- 分页获取数据 -->
+    <select id="getVOByPage" resultType="com.noob.module.admin.base.user.model.vo.UserSignVO" parameterType="com.noob.module.admin.base.user.model.dto.UserSignQueryRequest">
+        <include refid="selectVO"></include>
+        where 1=1 and us.isDelete = 0
+        <!-- 条件数据封装 -->
+        <if test="params.title !=null and  params.title != ''">
+            and us.title like concat('%',#{params.title},'%')
+        </if>
+        <if test="params.signInChannel !=null and  params.signInChannel != ''">
+            and us.signInChannel like concat('%',#{params.signInChannel},'%')
+        </if>
+        <if test="params.uname !=null and  params.uname != ''">
+            and u.userName like concat('%',#{params.uname},'%')
+        </if>
+    </select>
+
+    <select id="getTodaySinInByUid"  resultType="com.noob.module.admin.base.user.model.vo.UserSignVO" parameterType="long">
+        select *
+        from user_sign us
+        where us.uid = #{uid} and DATE(us.signInTime) = CURDATE()
+    </select>
+</mapper>

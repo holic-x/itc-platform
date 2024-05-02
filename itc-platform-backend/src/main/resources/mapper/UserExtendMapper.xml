@@ -24,4 +24,10 @@
         grade,registerChannel,createTime,updateTime,
         isDelete
     </sql>
+    <select id="getUserExtendByUserId" resultType="com.noob.module.admin.base.user.model.entity.UserExtend">
+        select
+        <include refid="Base_Column_List"></include>
+        from user_extend ue
+        where ue.userId = #{userId}
+    </select>
 </mapper>

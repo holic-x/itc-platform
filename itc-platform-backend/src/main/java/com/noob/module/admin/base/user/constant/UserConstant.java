@@ -89,5 +89,12 @@ public interface UserConstant {
     String USER_REGISTER_CHANNEL_WX = "WX";
 
 
+    /**
+     * 用户积分操作类型
+     */
+    String USER_SCORE_OPER_TYPE_ADD = "add";
+    String USER_SCORE_OPER_TYPE_SUB = "sub";
+
+
     // endregion
 }

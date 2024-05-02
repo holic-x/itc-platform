@@ -21,4 +21,12 @@ public interface UserExtendService extends IService<UserExtend> {
      */
     public boolean initDefaultUserExtend(long uid, Date currentTime,String registerChannel);
 
+    /**
+     * 修改用户积分
+     * @param uid
+     * @param score
+     * @return
+     */
+    public boolean updateUserScore(long uid, int score,String operType);
+
 }

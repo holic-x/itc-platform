@@ -18,6 +18,12 @@ import java.util.Date;
 public class UserExtendServiceImpl extends ServiceImpl<UserExtendMapper, UserExtend>
     implements UserExtendService {
 
+    private final UserExtendMapper userExtendMapper;
+
+    public UserExtendServiceImpl(UserExtendMapper userExtendMapper) {
+        this.userExtendMapper = userExtendMapper;
+    }
+
     @Override
     public boolean initDefaultUserExtend(long uid, Date currentTime,String registerChannel) {
         // 初始化用户扩展信息（user_extend）
@@ -36,6 +42,22 @@ public class UserExtendServiceImpl extends ServiceImpl<UserExtendMapper, UserExt
         boolean insertUserExtendRes = this.save(userExtend);
         return insertUserExtendRes;
     }
+
+    @Override
+    public boolean updateUserScore(long uid, int score, String operType) {
+        // 根据ID获取用户信息，修改用户积分
+        UserExtend  findUserExtend = userExtendMapper.getUserExtendByUserId(uid);
+        int userScore = findUserExtend.getScore();
+        UserExtend updateUserExtend = new UserExtend();
+        updateUserExtend.setId(findUserExtend.getId());
+        if(UserConstant.USER_SCORE_OPER_TYPE_ADD.equals(operType)){
+            updateUserExtend.setScore(userScore + score);
+        }else if (UserConstant.USER_SCORE_OPER_TYPE_SUB.equals(operType)){
+            updateUserExtend.setScore(userScore - score);
+        }
+        return this.updateById(updateUserExtend);
+    }
+
 }
 
 
