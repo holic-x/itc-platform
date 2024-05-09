@@ -77,6 +77,11 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         Page<NotificationVO> notificationVOPage = notificationMapper.getVOByPage(notificationQueryRequest,page);
         return notificationVOPage;
     }
+
+    @Override
+    public NotificationVO getNotificationVOByDomain(String domain) {
+        return notificationMapper.getNotificationVOByDomain(domain);
+    }
 }
 
 

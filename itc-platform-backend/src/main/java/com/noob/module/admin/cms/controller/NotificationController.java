@@ -17,6 +17,7 @@ import com.noob.module.admin.cms.model.entity.Notification;
 import com.noob.module.admin.cms.model.vo.NotificationVO;
 import com.noob.module.admin.cms.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -135,6 +136,19 @@ public class NotificationController {
         }
         return ResultUtils.success(notificationService.getNotificationVOId(id));
     }
+
+    /**
+     * 根据 domain 获取
+     *
+     * @param domain
+     * @return
+     */
+    @GetMapping("/getNotificationVOByDomain")
+    public BaseResponse<NotificationVO> getNotificationVOByDomain(String domain) {
+        ThrowUtils.throwIf(StringUtils.isBlank(domain),ErrorCode.PARAMS_ERROR);
+        return ResultUtils.success(notificationService.getNotificationVOByDomain(domain));
+    }
+
 
     /**
      * 根据筛选条件获取列表

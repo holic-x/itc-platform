@@ -50,10 +50,17 @@
                 LEFT JOIN `user` uu ON uu.id = nt.updater
     </sql>
 
-    <!-- 分页获取数据 -->
+    <!-- 根据ID获取 -->
     <select id="getVOById" resultType="com.noob.module.admin.cms.model.vo.NotificationVO" parameterType="long">
         <include refid="selectVO"></include>
         where nt.id = #{noticeId}
+    </select>
+
+    <!-- 根据数domain获取最新的数据 -->
+    <select id="getNotificationVOByDomain" resultType="com.noob.module.admin.cms.model.vo.NotificationVO" parameterType="string">
+        <include refid="selectVO"></include>
+        where nt.domain = #{domain}
+        order by nt.updateTime desc limit 1
     </select>
 
     <!-- 分页获取数据 -->

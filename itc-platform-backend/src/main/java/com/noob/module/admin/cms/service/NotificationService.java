@@ -49,4 +49,12 @@ public interface NotificationService extends IService<Notification> {
      */
     Page<NotificationVO> getVOByPage(NotificationQueryRequest notificationQueryRequest);
 
+    /**
+     * 根据domain获取数据封装
+     *
+     * @param domain
+     * @return
+     */
+    NotificationVO getNotificationVOByDomain(String domain);
+
 }

@@ -21,7 +21,8 @@ public interface NotificationMapper extends BaseMapper<Notification> {
     // 根据ID查找数据
     NotificationVO getVOById(@Param("noticeId") long noticeId);
 
-
+    // 根据ID查找最新的通知信息
+    NotificationVO getNotificationVOByDomain(@Param("domain") String domain);
 
     // 根据筛选条件查找数据
     List<NotificationVO> getVOByCond(@Param("params") NotificationQueryRequest dataInfoQueryRequest);
