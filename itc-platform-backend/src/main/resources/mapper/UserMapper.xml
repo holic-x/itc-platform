@@ -21,10 +21,9 @@
 
     <sql id="Base_Column_List">
         id,unionId,mpOpenId,
-        userName,userAvatar,userProfile,userDescr,address
+        userName,userAvatar,userProfile,userDescr,userEmail,address
         userRole,createTime,updateTime,userStatus,isDelete
     </sql>
-
 
     <!-- 获取用户信息详情 -->
     <select id="getUserVOMore" parameterType="long" resultType="com.noob.module.admin.base.user.model.vo.UserVO">
@@ -51,4 +50,12 @@
                 left join user_extend ue on ue.userId = u.id
         where u.id = #{userId}
     </select>
+
+    <!-- 根据邮箱获取用户信息 -->
+    <select id="getUserVOByEmail" resultType="com.noob.module.admin.base.user.model.entity.User">
+        select <include refid="Base_Column_List"></include>
+        from user
+        where userEmail = #{email}
+    </select>
+
 </mapper>

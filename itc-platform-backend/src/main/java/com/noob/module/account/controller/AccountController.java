@@ -147,8 +147,20 @@ public class AccountController {
     @GetMapping("/sendEmailCode")
     public BaseResponse<Boolean> sendEmailCode(@RequestParam String email) {
         // 调用验证码服务获取邮箱验证码信息
-        accountService.sendEmailCode(email);
-        return ResultUtils.success(true);
+        boolean res = accountService.sendEmailCode(email);
+        return ResultUtils.success(res);
+    }
+
+
+    /**
+     * 换绑邮箱
+     * @return
+     */
+    @GetMapping("/bindEmail")
+    public BaseResponse<Boolean> bindEmail(@RequestParam String email,@RequestParam String code) {
+        // 调用验证码服务获取邮箱验证码信息
+        boolean res = accountService.bindEmail(email,code);
+        return ResultUtils.success(res);
     }
 
 }

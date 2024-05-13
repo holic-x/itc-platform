@@ -34,4 +34,10 @@ public interface AccountService {
      */
     boolean sendEmailCode(String email);
 
+    /**
+     * 绑定邮箱
+     * @return
+     */
+    boolean bindEmail(String email,String code);
+
 }

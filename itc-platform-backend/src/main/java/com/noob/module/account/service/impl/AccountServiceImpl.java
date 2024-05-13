@@ -6,9 +6,14 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
+import com.noob.framework.cache.RedisCache;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.exception.BusinessException;
+import com.noob.framework.exception.ThrowUtils;
+import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.account.service.AccountService;
+import com.noob.module.admin.base.user.mapper.UserMapper;
+import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.common.email.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @Description TODO
@@ -39,11 +45,14 @@ public class AccountServiceImpl implements AccountService {
     @Resource
     private EmailService emailService;
 
-//    @Resource
-//    private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private RedisCache redisCache;
 
     @Value("${custom.emailCode.expiration}")
     private Long expiration;
+
+    @Resource
+    private UserMapper userMapper;
 
 
     @Override
@@ -86,37 +95,67 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean sendEmailCode(String email) {
-        /*
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        // 校验当前指定的邮箱是否已被绑定（查看注册邮箱是否存在）
+//        User findUser = userMapper.getUserVOByEmail(email);
+//        ThrowUtils.throwIf(findUser != null,ErrorCode.USER_EMAIL_REPEAT_ERROR,"当前邮箱账号已被注册，请确认后再次尝试");
 
-        // todo 查看注册邮箱是否存在
-
-        // 获取发送邮箱验证码的HTML模板
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
-        Template template = engine.getTemplate("email-code.ftl");
+        // 定义存储键值对的键规则
+        String emailCodeKey = "emailCode:" + email;
 
         // 从redis缓存中尝试获取验证码
-        Object code = valueOperations.get(email);
-        if (code == null) {
-            // 如果在缓存中未获取到验证码，则产生6位随机数，放入缓存中
-            code = RandomUtil.randomNumbers(6);
-            try {
-                valueOperations.set(email, code, expiration, TimeUnit.SECONDS);
-            } catch (Exception e) {
-                throw new BusinessException(ErrorCode.SYSTEM_ERROR,"后台缓存服务异常");
-            }
+        String cacheCode = redisCache.getCacheObject(emailCodeKey);
+        String emailCode = "";
+        // 如果缓存中已经存在字符串数据，则直接取出
+        if(StringUtils.isBlank(cacheCode)){
+            // 随机生成6位验证码
+            emailCode = RandomUtil.randomNumbers(6);
+            // 将邮箱和验证码信息存入redis缓存
+            redisCache.setCacheObject(emailCodeKey,emailCode);
+            redisCache.expire(emailCodeKey,expiration*100);
+        }else{
+            // 缓存中已经存在数据，不重复生成，直接返回缓存数据（或者提示用户不要操作太频繁，确认邮箱后再重新尝试）
+            // emailCode = cacheCode;
+            throw new BusinessException(ErrorCode.TOO_MANY_REQUEST,"验证码已生成并发送到您邮箱，请确认后再次尝试");
         }
-        */
 
         // 获取发送邮箱验证码的HTML模板(resources/templates/下存放模板信息)
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("email-code.ftl");
 
         // 调用邮箱服务发送验证码信息
-        String subject = "邮箱验证码";
-        String content = template.render(Dict.create().set("code", RandomUtil.randomNumbers(6)).set("expiration", expiration));
+        String subject = "【一人の境】邮箱验证码";
+        String content = template.render(Dict.create().set("code",emailCode).set("expiration", expiration));
         emailService.sendMail(email,subject,content);
         // 返回响应信息
         return true;
+    }
+
+    /**
+     * 根据验证码、邮箱绑定当前用户邮箱信息
+     * @param email
+     * @param code
+     * @return
+     */
+    @Override
+    public boolean bindEmail(String email, String code) {
+        // 校验当前指定的邮箱是否已被绑定（查看注册邮箱是否存在）
+        User findUser = userMapper.getUserVOByEmail(email);
+        ThrowUtils.throwIf(findUser != null,ErrorCode.USER_EMAIL_REPEAT_ERROR,"当前邮箱账号已被他人绑定，请确认后再次尝试");
+
+        // 获取缓存中的验证码信息
+        String emailCodeKey = "emailCode:" + email;
+        String cacheCode = redisCache.getCacheObject(emailCodeKey);
+        ThrowUtils.throwIf(StringUtils.isBlank(cacheCode),ErrorCode.VALID_CODE_ERROR,"当前验证码已过期，请稍后再次尝试");
+
+        // 校验验证码是否正确
+        ThrowUtils.throwIf(!cacheCode.equals(code),ErrorCode.VALID_CODE_ERROR,"验证码校验失败，请确认后再次尝试");
+
+        // 邮箱账号和验证码校验通过，更新邮箱信息
+        User user = new User();
+        user.setId(ShiroUtil.getCurrentUserId());
+        user.setUserEmail(email);
+        user.setUpdateTime(new Date());
+        int res = userMapper.updateById(user);
+        return res>0;
     }
 }

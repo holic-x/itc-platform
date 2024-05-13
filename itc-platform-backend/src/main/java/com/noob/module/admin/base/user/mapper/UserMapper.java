@@ -14,6 +14,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     public UserVO getUserVOMore(@Param(value="userId") long userId);
 
+    // 根据邮箱信息获取关联用户（一个邮箱只能绑定一个邮箱）
+    public User getUserVOByEmail(@Param(value="email") String email);
+
 }
 
 

@@ -1,8 +1,9 @@
 package com.noob.module.admin.base.user.model.vo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 已登录用户视图（脱敏）
@@ -35,6 +36,11 @@ public class LoginUserVO implements Serializable {
      * 用户角色：user/admin/ban
      */
     private String userRole;
+
+    /**
+     * 个人邮箱
+     */
+    private String userEmail;
 
     /**
      * 个人介绍
