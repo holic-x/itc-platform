@@ -27,4 +27,11 @@ public interface AccountService {
      * @return
      */
     void userLogout();
+
+    /**
+     * 发送邮箱验证码
+     * @return
+     */
+    boolean sendEmailCode(String email);
+
 }

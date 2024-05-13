@@ -170,6 +170,20 @@
         </dependency>
         <!-- end 安全认证框架引入 -->
 
+        <!-- 邮箱配置相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--引入模板引擎（动态模板构建美化页面显示） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>

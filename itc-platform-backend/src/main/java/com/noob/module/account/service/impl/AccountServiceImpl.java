@@ -1,23 +1,23 @@
 package com.noob.module.account.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.extra.template.TemplateUtil;
 import com.noob.framework.common.ErrorCode;
 import com.noob.framework.exception.BusinessException;
 import com.noob.module.account.service.AccountService;
-import com.noob.module.admin.base.user.constant.UserConstant;
-import com.noob.module.admin.base.user.mapper.UserMapper;
-import com.noob.module.admin.base.user.model.entity.User;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
-import com.noob.module.admin.base.user.service.UserService;
+import com.noob.module.admin.common.email.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.SubjectContext;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +35,16 @@ public class AccountServiceImpl implements AccountService {
      * 盐值，混淆密码
      */
     public static final String SALT = "noob";
+
+    @Resource
+    private EmailService emailService;
+
+//    @Resource
+//    private RedisTemplate<String,Object> redisTemplate;
+
+    @Value("${custom.emailCode.expiration}")
+    private Long expiration;
+
 
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword,HttpServletRequest request) {
@@ -72,5 +82,41 @@ public class AccountServiceImpl implements AccountService {
             // 销毁SESSION(清理权限缓存)
             subject.logout();
         }
+    }
+
+    @Override
+    public boolean sendEmailCode(String email) {
+        /*
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+
+        // todo 查看注册邮箱是否存在
+
+        // 获取发送邮箱验证码的HTML模板
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
+        Template template = engine.getTemplate("email-code.ftl");
+
+        // 从redis缓存中尝试获取验证码
+        Object code = valueOperations.get(email);
+        if (code == null) {
+            // 如果在缓存中未获取到验证码，则产生6位随机数，放入缓存中
+            code = RandomUtil.randomNumbers(6);
+            try {
+                valueOperations.set(email, code, expiration, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR,"后台缓存服务异常");
+            }
+        }
+        */
+
+        // 获取发送邮箱验证码的HTML模板(resources/templates/下存放模板信息)
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.CLASSPATH));
+        Template template = engine.getTemplate("email-code.ftl");
+
+        // 调用邮箱服务发送验证码信息
+        String subject = "邮箱验证码";
+        String content = template.render(Dict.create().set("code", RandomUtil.randomNumbers(6)).set("expiration", expiration));
+        emailService.sendMail(email,subject,content);
+        // 返回响应信息
+        return true;
     }
 }

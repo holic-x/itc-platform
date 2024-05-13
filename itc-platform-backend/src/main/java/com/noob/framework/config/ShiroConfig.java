@@ -67,6 +67,7 @@ public class ShiroConfig {
 
         map.put("/account/login", "anon");
         map.put("/account/logout", "anon");
+        map.put("/account/sendEmailCode", "anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
 

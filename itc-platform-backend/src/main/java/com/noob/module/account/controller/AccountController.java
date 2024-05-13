@@ -9,8 +9,6 @@ import com.noob.framework.realm.ShiroUtil;
 import com.noob.module.account.service.AccountService;
 import com.noob.module.admin.base.user.constant.UserConstant;
 import com.noob.module.admin.base.user.model.dto.UserLoginRequest;
-import com.noob.module.admin.base.user.model.entity.User;
-import com.noob.module.admin.base.user.model.entity.UserExtend;
 import com.noob.module.admin.base.user.model.entity.UserSign;
 import com.noob.module.admin.base.user.model.vo.LoginUserVO;
 import com.noob.module.admin.base.user.model.vo.UserSignVO;
@@ -102,7 +100,7 @@ public class AccountController {
      * 获取用户信息详情（获取当前登录用户）
      * @return
      */
-    @GetMapping("/account/getUserVOMoreByCurrentLoginUser")
+    @GetMapping("/getUserVOMoreByCurrentLoginUser")
     public BaseResponse<UserVO> getUserVOMoreByCurrentLoginUser() {
         LoginUserVO currentUser = ShiroUtil.getCurrentUser();
         // 获取用户信息详情
@@ -110,7 +108,10 @@ public class AccountController {
     }
 
 
-    // 用户签到
+    /**
+     * 用户签到
+     * @return
+     */
     @PostMapping("/userSignIn")
     public BaseResponse<Long> userSignIn() {
 
@@ -136,6 +137,18 @@ public class AccountController {
 
         // 返回签到记录ID
         return ResultUtils.success(userSign.getId());
+    }
+
+
+    /**
+     * 发送邮箱验证码
+     * @return
+     */
+    @GetMapping("/sendEmailCode")
+    public BaseResponse<Boolean> sendEmailCode(@RequestParam String email) {
+        // 调用验证码服务获取邮箱验证码信息
+        accountService.sendEmailCode(email);
+        return ResultUtils.success(true);
     }
 
 }
